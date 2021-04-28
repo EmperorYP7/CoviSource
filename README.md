@@ -1,3 +1,7 @@
+##### Add new pages to the `components/Pages/"PageName_Dir` directory.
+
+##### Add the components required by the "pages" to `components/UtilityComponents/"ComponentName_Dir"` directory
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
