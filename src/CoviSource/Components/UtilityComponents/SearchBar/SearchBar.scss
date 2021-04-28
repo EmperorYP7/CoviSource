@@ -1,0 +1,76 @@
+$searchbarDesktopWidth: 800px;
+$searchbarDesktopHeight: 75px;
+
+.tag-input {
+  display: flex;
+  align-items: center;
+  height: 75px;
+  padding: 5px;
+  border: none;
+  border-radius: 6px;
+  background-color: #fff;
+  width: 100%;
+  min-width: $searchbarDesktopWidth;
+  height: $searchbarDesktopHeight;
+
+  input {
+    flex: 1;
+    height: 60px;
+    font-size: 14px;
+    padding-left: 15px;
+    border: none;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 25px;
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &::placeholder {
+      color: #aaa;
+      font-size: 18px;
+    }
+  }
+
+  button {
+    width: 142px;
+    height: 60px;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+
+    li {
+      cursor: pointer;
+      width: auto;
+      height: 45px;
+      background: rgba(125, 46, 185, 0.7);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      list-style: none;
+      margin-left: 2.5px;
+      margin-right: 2.5px;
+      padding: 15px;
+
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 14px;
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .tag-close-icon {
+    font-size: 14px;
+    color: #fff;
+    margin-left: 10px;
+  }
+}
