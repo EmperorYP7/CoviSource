@@ -6,6 +6,12 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { HelloResolver } from "./resolvers/hello";
 import { ProviderResolver } from "./resolvers/Provider";
+import { UserResolver } from './resolvers/user';
+import redis from 'redis';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
+import { __prod__ } from './constants';
+import { MyContext } from './types';
 
 const main = async () => {
     const orm = await MikroORM.init(mikroConfig);
@@ -13,25 +19,41 @@ const main = async () => {
     
     const app = express();
 
+    const RedisStore = connectRedis(session);
+    const redisClient = redis.createClient();
+
+    app.use(
+        session({
+            name: 'qid',
+            store: new RedisStore({
+                client: redisClient,
+                disableTouch: true
+            }),
+            cookie: {
+                maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+                httpOnly: true,
+                secure: __prod__,
+                sameSite: 'lax'
+            },
+            saveUninitialized: false,
+            secret: 'asdjoajsiodjaiojsdasd',
+            resave: false,
+        })
+    );
+
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [HelloResolver, ProviderResolver],
+            resolvers: [HelloResolver, ProviderResolver, UserResolver],
             validate: false
         }),
-        context: () => ({ em: orm.em })
+        context: ({ req, res }) : MyContext => ({ em: orm.em, req, res })
     });
 
     apolloServer.applyMiddleware({ app }); 
 
     app.listen(4000, () => {
         console.log("connected to DB!");
-    })
-    // const data = { providerName: 'D.Y. Patil Hospital'};
-    // const provider = orm.em.create(Provider, data);
-    // await orm.em.persistAndFlush(provider);
-
-    // const post = await orm.em.find(Provider, {});
-    // console.log(post);
+    });
 };
 
 main();

@@ -3,7 +3,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Provider {
+export class User {
     @Field(() => Int)
     @PrimaryKey()
     _id!: number;
@@ -17,13 +17,10 @@ export class Provider {
     updatedAt = new Date();
 
     @Field(() => String)
+    @Property({ type: 'text', unique: true })
+    username!: string;
+
     @Property({ type: 'text' })
-    providerName!: string;
-
-    // @Property()
-    // location: Geolocation;
-
-    // @Property()
-    // adhaar: number;
+    password!: string;
 
 }
