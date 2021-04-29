@@ -1,4 +1,5 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import slugify from "slugify";
 import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
@@ -19,6 +20,10 @@ export class Provider {
     @Field(() => String)
     @Property({ type: 'text' })
     providerName!: string;
+
+    @Field(() => String)
+    @Property({ type: 'text' })
+    slug!: string;
 
     // @Property()
     // location: Geolocation;

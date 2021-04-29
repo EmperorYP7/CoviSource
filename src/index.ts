@@ -4,9 +4,8 @@ import mikroConfig from "./mikro-orm.config";
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import { HelloResolver } from "./resolvers/hello";
 import { ProviderResolver } from "./resolvers/Provider";
-import { UserResolver } from './resolvers/user';
+import { UserResolver } from './resolvers/User';
 import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
@@ -16,7 +15,7 @@ import { MyContext } from './types';
 const main = async () => {
     const orm = await MikroORM.init(mikroConfig);
     await orm.getMigrator().up();
-    
+
     const app = express();
 
     const RedisStore = connectRedis(session);
@@ -43,7 +42,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [HelloResolver, ProviderResolver, UserResolver],
+            resolvers: [ProviderResolver, UserResolver],
             validate: false
         }),
         context: ({ req, res }) : MyContext => ({ em: orm.em, req, res })

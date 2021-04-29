@@ -1,6 +1,7 @@
 import { Provider } from '../entities/Provider';
 import { MyContext } from '../types';
 import { Arg, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
+import slugify from 'slugify';
 
 @Resolver()
 export class ProviderResolver {
@@ -22,7 +23,7 @@ export class ProviderResolver {
         @Arg('providerName', () => String) providerName: string,
         @Ctx() { em }: MyContext
     ): Promise<Provider> {
-        const provider = em.create(Provider, { providerName: providerName });
+        const provider = em.create(Provider, { providerName: providerName, slug: slugify(providerName) });
         await em.persistAndFlush(provider);
         return provider;
     }
@@ -39,6 +40,7 @@ export class ProviderResolver {
         }
         if (typeof providerName !== 'undefined') {
             provider.providerName = providerName;
+            provider.slug = slugify(providerName);
             await em.persistAndFlush(provider);
         }
         return provider;

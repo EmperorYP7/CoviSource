@@ -2,14 +2,30 @@ import { User } from '../entities/User';
 import { MyContext } from '../types';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import argon2 from 'argon2';
+import { COOKIE_NAME } from '../constants';
 
 @InputType()
 class UsernamePasswordInput {
     @Field()
-    username: string
-    
+    email: string
+
     @Field()
     password: string
+}
+
+@InputType()
+class UserRegisterInput {
+    @Field()
+    email: string
+
+    @Field()
+    password: string
+
+    @Field()
+    contactNumber: string
+
+    @Field()
+    name: string
 }
 
 @ObjectType()
@@ -48,10 +64,10 @@ export class UserResolver {
 
     @Mutation(() => UserResponse)
     async register(
-        @Arg('input') input: UsernamePasswordInput,
+        @Arg('input') input: UserRegisterInput,
         @Ctx() { em, req }: MyContext
     ): Promise<UserResponse> {
-        if (input.username.length <= 4) {
+        if (input.email.length <= 4) {
             return {
                 errors: [{
                     field: "username",
@@ -67,17 +83,38 @@ export class UserResolver {
                 }]
             }
         }
+        if (input.contactNumber.length < 10) {
+            return {
+                errors: [{
+                    field: "contactNumber",
+                    message: "Contact number is invalid. Enter 10 Digit number"
+                }]
+            }
+        }
+        if (input.name.length < 3) {
+            return {
+                errors: [{
+                    field: "name",
+                    message: "Enter valid name!"
+                }]
+            }
+        }
         const hasedPassword = await argon2.hash(input.password);
-        const user = em.create(User, { username: input.username, password: hasedPassword });
+        const user = em.create(User, {
+            email: input.email,
+            password: hasedPassword,
+            name: input.name,
+            contactNumber: input.contactNumber
+        });
         try {
             await em.persistAndFlush(user);
         } catch (err) {
             // Duplicate user error
-            if (err.code === '23505' || err.detail.includes('already exists')) {
+            if (err.code === '23505') {
                 return {
                     errors: [{
-                        field: "username",
-                        message: "This username is already taken"
+                        field: "email",
+                        message: "This user already exists!"
                     }]
                 }
             }
@@ -95,11 +132,11 @@ export class UserResolver {
         @Arg('input') input: UsernamePasswordInput,
         @Ctx() {em, req} : MyContext
     ) : Promise<UserResponse> {
-        const user = await em.findOne(User, { username: input.username });
+        const user = await em.findOne(User, { email: input.email });
         if (!user) {
             return {
                 errors: [{
-                    field: "username",
+                    field: "email",
                     message: "That username doesn't exist!"
                 }],
             };
@@ -117,5 +154,22 @@ export class UserResolver {
         req.session.userID = user._id;
 
         return { user };
+    }
+
+    @Mutation(() => Boolean)
+    logout(
+        @Ctx() {req, res}: MyContext
+    ) {
+        return new Promise((resolve) => 
+            req.session.destroy((err) => {
+                if (err) {
+                    console.log(err);
+                    resolve(false);
+                    return;
+                }
+                res.clearCookie(COOKIE_NAME as string);
+                resolve(true);
+            })
+        )
     }
 }
