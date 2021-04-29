@@ -1,0 +1,15 @@
+$font: "Roboto", sans-serif;
+
+* {
+  font-family: $font;
+}
+
+.main {
+  min-height: 100vh;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

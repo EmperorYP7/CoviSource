@@ -1,0 +1,109 @@
+$searchbarDesktopWidth: 260px;
+$searchbarDesktopHeight: 40px;
+
+.tag-input {
+  display: flex;
+  align-items: center;
+  height: 75px;
+  padding: 5px;
+  border: none;
+  border-radius: 6px;
+  background-color: #fff;
+  width: 100%;
+  min-width: $searchbarDesktopWidth;
+  min-height: $searchbarDesktopHeight;
+
+  input {
+    flex: 1;
+    font-size: 18px;
+    padding-left: 15px;
+    border: none;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 25px;
+
+    &:focus {
+      outline: transparent;
+    }
+
+    &::placeholder {
+      color: #aaa;
+      font-size: 18px;
+    }
+  }
+
+  button {
+    height: 60px;
+    min-width: 142px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+
+  li {
+    cursor: pointer;
+    width: auto;
+    height: 45px;
+    background: rgba(125, 46, 185, 0.7);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    list-style: none;
+    margin: 2.5px;
+    padding: 15px;
+
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+  }
+}
+
+.tag-close-icon {
+  font-size: 14px;
+  color: #fff;
+  margin-left: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .tag-input {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      height: 32px;
+      min-width: 60px;
+    }
+
+    input {
+      font-size: 14px;
+      max-width: 240px;
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+  }
+  .tags {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+
+    li {
+      height: 32px;
+      padding: 5px;
+      font-size: 10px;
+      margin: 2.5px;
+    }
+  }
+}
