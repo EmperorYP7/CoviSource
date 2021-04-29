@@ -1,14 +1,16 @@
-import React, { useState, MouseEventHandler } from "react";
+import React, { useState } from "react";
+import propTypes from "prop-types";
 import "./SearchBar.scss";
 import Button from "components/CustomButtons/Button.js";
 import { isMobile } from "CoviSource/UtilityFunctions";
 
-type SearchProps = {
-  tags: string[],
-  callBackFunction: MouseEventHandler,
+SearchBar.propTypes = {
+  tags: propTypes.arrayOf(String),
+  callBackFunction: propTypes.func,
 };
 
-export default function SearchBar({ tags, callBackFunction }: SearchProps) {
+export default function SearchBar(props) {
+  const { tags, callBackFunction } = props;
   const [tagData, setTagData] = useState(tags);
   const onSearchButtonClick = callBackFunction;
   const removeTagData = (indexToRemove) => {
@@ -42,7 +44,6 @@ export default function SearchBar({ tags, callBackFunction }: SearchProps) {
   return (
     <>
       <div className="tag-input">
-        {/* {isMobile() ? null : renderTags()} */}
         <input
           id="searchbar-input"
           type="text"

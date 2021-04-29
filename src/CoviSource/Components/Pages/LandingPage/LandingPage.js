@@ -1,8 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 
+// nodejs library that concatenates classes
+import classNames from "classnames";
+
 // core components
 import Header from "components/Header/Header.js";
+
 // import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -11,7 +15,7 @@ import Parallax from "components/Parallax/Parallax.js";
 
 // sections for the page
 import HeaderLinks from "components/Header/HeaderLinks.js";
-
+import ResourcesCardView from "CoviSource/Components/UtilityComponents/ResourcesCardSection/CardView";
 // utility components
 import SearchBar from "CoviSource/Components/UtilityComponents/SearchBar/SearchBar";
 
@@ -29,6 +33,20 @@ export default function LandingPage(props) {
     console.log("Search Button Clicked");
   };
 
+  const renderResroucesCards = function () {
+    return (
+      <div
+        className={
+          isMobile()
+            ? classNames(classes.main)
+            : classNames(classes.main, classes.mainRaised)
+        }
+      >
+        <ResourcesCardView />
+      </div>
+    );
+  };
+
   return (
     <div>
       <Header
@@ -38,8 +56,8 @@ export default function LandingPage(props) {
         fixed
         color="transparent"
         changeColorOnScroll={{
-          height: 400,
-          color: "white",
+          height: 200,
+          color: "primary",
         }}
         {...rest}
       />
@@ -68,6 +86,7 @@ export default function LandingPage(props) {
           <SearchBar tags={["Oxygen"]} callBackFunction={onSearchButtonClick} />
         </div>
       </Parallax>
+      {renderResroucesCards()}
     </div>
   );
 }
