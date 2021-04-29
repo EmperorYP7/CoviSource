@@ -62,13 +62,10 @@ export default function LandingPage(props) {
                 <h3 className={classes.subtitleReduced}>
                   Find resources that you need
                 </h3>
-                <SearchBar
-                  tags={["Oxygen"]}
-                  callBackFunction={onSearchButtonClick}
-                />
               </div>
             </GridItem>
           </GridContainer>
+          <SearchBar tags={["Oxygen"]} callBackFunction={onSearchButtonClick} />
         </div>
       </Parallax>
     </div>
