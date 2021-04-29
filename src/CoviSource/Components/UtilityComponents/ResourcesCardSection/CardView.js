@@ -1,6 +1,7 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import propTypes from "prop-types";
 
 // @material-ui/icons
 
@@ -12,6 +13,10 @@ import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import styles from "assets/jss/material-kit-react/views/componentsSections/basicsStyle.js";
 
 const useStyles = makeStyles(styles);
+
+CardView.propTypes = {
+  data: propTypes.objectOf(Array),
+};
 
 export default function CardView() {
   const classes = useStyles();
