@@ -1,0 +1,43 @@
+.cardViewList {
+  padding: 0;
+  border: solid 1px black;
+  margin: 0;
+  list-style: none;
+
+  li {
+    border: solid 1px black;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 0.7fr 0.3fr;
+    grid-template-areas: "data info";
+
+    .data {
+      grid-area: data;
+      text-align: left;
+    }
+
+    .info {
+      grid-area: info;
+      text-align: end;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .cardViewList {
+    li {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "data"
+        "info";
+
+      .data {
+        text-align: left;
+      }
+
+      .info {
+        text-align: left;
+      }
+    }
+  }
+}

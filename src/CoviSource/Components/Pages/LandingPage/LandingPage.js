@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 
 // nodejs library that concatenates classes
@@ -29,8 +29,171 @@ export default function LandingPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  const [data, setData] = useState([
+    {
+      username: "someUsername",
+      resourceProviderName: "Resource Provider Name",
+      availability: "UNUPDATED",
+      resources: [
+        {
+          resource: "Oxygen refilling",
+          quantity: 32,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Hospital Beds",
+          quantity: 23,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Remdesivir Vials",
+          quantity: 65,
+          updated: "06:00 PM, 27 APRIL",
+        },
+      ],
+      address: "Provider Address",
+      contactPersonName: "Contact Person's Name",
+      contactNumber: "9821095754",
+      serviceName: "Service Provided",
+    },
+    {
+      username: "anotherUsername",
+      resourceProviderName: "Free oxygen seva vijaya nagar",
+      availability: "AVAILABLE",
+      resources: [
+        {
+          resource: "Oxygen refilling",
+          quantity: 32,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Hospital Beds",
+          quantity: 23,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Remdesivir Vials",
+          quantity: 65,
+          updated: "06:00 PM, 27 APRIL",
+        },
+      ],
+      address: "Free oxygen seva, near gurudwara, delhi",
+      contactPersonName: "Jaspal Singh",
+      contactNumber: "9821095754",
+      serviceName: "Oxygen refilling",
+    },
+    {
+      username: "anotherUsername2",
+      resourceProviderName: "Apex Hospital",
+      availability: "UNAVAILABLE",
+      resources: [
+        {
+          resource: "Oxygen Cylinders",
+          quantity: 0,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Hospital Beds",
+          quantity: 0,
+          updated: "06:00 PM, 27 APRIL",
+        },
+        {
+          resource: "Remdesivir Vials",
+          quantity: 0,
+          updated: "06:00 PM, 27 APRIL",
+        },
+      ],
+      address: "Apex Hospital, Kalyan West, Mumbai",
+      contactPersonName: "Dr. D P Goel",
+      contactNumber: "9789965234",
+      serviceName: "Hospital",
+    },
+  ]);
+
   const onSearchButtonClick = function () {
     console.log("Search Button Clicked");
+
+    // a fetch operation will be made here which will then update the state -> data;
+    setData([
+      {
+        username: "someUsername",
+        resourceProviderName: "Resource Provider Name",
+        availability: "UNUPDATED",
+        resources: [
+          {
+            resource: "Oxygen refilling",
+            quantity: 32,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Hospital Beds",
+            quantity: 23,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Remdesivir Vials",
+            quantity: 65,
+            updated: "06:00 PM, 27 APRIL",
+          },
+        ],
+        address: "Provider Address",
+        contactPersonName: "Contact Person's Name",
+        contactNumber: "9821095754",
+        serviceName: "Service Provided",
+      },
+      {
+        username: "anotherUsername",
+        resourceProviderName: "Free oxygen seva vijaya nagar",
+        availability: "AVAILABLE",
+        resources: [
+          {
+            resource: "Oxygen refilling",
+            quantity: 32,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Hospital Beds",
+            quantity: 23,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Remdesivir Vials",
+            quantity: 65,
+            updated: "06:00 PM, 27 APRIL",
+          },
+        ],
+        address: "Free oxygen seva, near gurudwara, delhi",
+        contactPersonName: "Jaspal Singh",
+        contactNumber: "9821095754",
+        serviceName: "Oxygen refilling",
+      },
+      {
+        username: "anotherUsername2",
+        resourceProviderName: "Apex Hospital",
+        availability: "UNAVAILABLE",
+        resources: [
+          {
+            resource: "Oxygen Cylinders",
+            quantity: 0,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Hospital Beds",
+            quantity: 0,
+            updated: "06:00 PM, 27 APRIL",
+          },
+          {
+            resource: "Remdesivir Vials",
+            quantity: 0,
+            updated: "06:00 PM, 27 APRIL",
+          },
+        ],
+        address: "Apex Hospital, Kalyan West, Mumbai",
+        contactPersonName: "Dr. D P Goel",
+        contactNumber: "9789965234",
+        serviceName: "Hospital",
+      },
+    ]);
   };
 
   const renderResroucesCards = function () {
@@ -42,7 +205,7 @@ export default function LandingPage(props) {
             : classNames(classes.main, classes.mainRaised)
         }
       >
-        <ResourcesCardView />
+        <ResourcesCardView data={data} />
       </div>
     );
   };
@@ -86,7 +249,7 @@ export default function LandingPage(props) {
           <SearchBar tags={["Oxygen"]} callBackFunction={onSearchButtonClick} />
         </div>
       </Parallax>
-      {renderResroucesCards()}
+      {renderResroucesCards(data)}
     </div>
   );
 }
