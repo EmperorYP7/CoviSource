@@ -49,12 +49,12 @@
     "eject": "react-scripts eject",
     "lint:check": "eslint . --ext=js,jsx;  exit 0",
     "lint:fix": "eslint . --ext=js,jsx --fix;  exit 0",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
-    "build-package-css": "node-sass src/assets/scss/material-kit-react.scss dist/material-kit-react.css",
-    "build-package": "npm run build-package-css && babel src --out-dir dist",
-    "compile-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css",
-    "minify-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.min.css --output-style compressed",
-    "map-sass": "node-sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css --source-map true"
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && yarn install && yarn start",
+    "build-package-css": "sass src/assets/scss/material-kit-react.scss dist/material-kit-react.css",
+    "build-package": "yarn run build-package-css && babel src --out-dir dist",
+    "compile-sass": "sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css",
+    "minify-sass": "sass src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.min.css --style compressed",
+    "map-sass": "sass --source-map-urls=relative src/assets/scss/material-kit-react.scss src/assets/css/material-kit-react.css"
   },
   "eslintConfig": {
     "extends": [

@@ -1,0 +1,256 @@
+.cardViewList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  cursor: pointer;
+
+  .detail {
+    grid-template-columns: 1fr;
+    grid-template-areas: "details";
+
+    .details > * {
+      display: flex;
+      align-items: center;
+    }
+
+    .details {
+      text-transform: uppercase;
+      grid-area: details;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      grid-template-areas:
+        "detailsinfo"
+        "detailsdata";
+
+      .detailsInfo {
+        grid-area: detailsinfo;
+        h6 {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 16px;
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .detailsData {
+        grid-area: detailsdata;
+        p {
+          margin: 0;
+          padding: 0;
+          font-size: 12px;
+          line-height: 14px;
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  li {
+    pointer-events: visibleFill;
+    color: #495057;
+    margin: 0;
+    margin-bottom: 1px;
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr;
+    grid-template-areas: "data info";
+    padding: 5px;
+    border-radius: 5px;
+
+    .data > * {
+      display: flex;
+      align-items: center;
+    }
+
+    .data {
+      text-transform: uppercase;
+      grid-area: data;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "dataresource"
+        "dataquantity";
+
+      .dataResource {
+        grid-area: dataresource;
+        h6 {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 16px;
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .dataQuantity {
+        grid-area: dataquantity;
+        p {
+          margin: 0;
+          padding: 0;
+          font-size: 12px;
+          line-height: 14px;
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .info > * {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .info {
+      text-transform: uppercase;
+      grid-area: info;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "updatetag"
+        "updateinfo";
+
+      .updateTag {
+        grid-area: updatetag;
+        h6 {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 16px;
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .updateInfo {
+        grid-area: updateinfo;
+        p {
+          margin: 0;
+          padding: 0;
+          font-size: 12px;
+          line-height: 14px;
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  .success:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(102, 187, 106, 0.1) 0%,
+      rgba(56, 142, 60, 0.1) 100%
+    );
+  }
+  .danger:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(239, 83, 80, 0.1) 0%,
+      rgba(211, 47, 47, 0.1) 100%
+    );
+  }
+  .warning:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 167, 38, 0.1) 0%,
+      rgba(245, 124, 0, 0.1) 100%
+    );
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .cardViewList {
+    li {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "data"
+        "info";
+
+      .data {
+        grid-template-columns: 0.7fr 0.3fr;
+        grid-template-areas: "dataresource dataquantity";
+
+        .dataResource {
+          justify-content: flex-start;
+        }
+
+        .dataQuantity {
+          justify-content: flex-end;
+        }
+      }
+
+      .info > * {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .info {
+        grid-template-columns: 0.3fr 0.7fr;
+        grid-template-areas: "updatetag updateinfo";
+
+        .updateTag {
+          justify-content: flex-start;
+        }
+
+        .updateInfo {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 374px) {
+  .cardViewList {
+    li {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "data"
+        "info";
+
+      .data {
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+          "dataresource"
+          "dataquantity";
+
+        .dataResource {
+          justify-content: flex-start;
+        }
+
+        .dataQuantity {
+          justify-content: flex-start;
+        }
+      }
+
+      .info > * {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+        grid-template-areas: "updateinfo";
+
+        .updateTag {
+          justify-content: flex-start;
+          display: none;
+        }
+
+        .updateInfo {
+          justify-content: flex-start;
+        }
+      }
+    }
+  }
+}
