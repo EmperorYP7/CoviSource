@@ -9,9 +9,11 @@ import propTypes from "prop-types";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
+import Button from "components/CustomButtons/Button";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/basicsStyle.js";
 import "./CardView.scss";
+import { isMobile } from "CoviSource/UtilityFunctions";
 const useStyles = makeStyles(styles);
 
 const status = {
@@ -20,14 +22,7 @@ const status = {
   UNUPDATED: "warning",
 };
 
-// const hoverColors = {
-//   AVAILABLE:
-//     "linear-gradient(90deg, rgba(102, 187, 106, 0.1) 0%, rgba(56, 142, 60, 0.1) 100%)",
-//   UNAVAILABLE:
-//     "linear-gradient(90deg, rgba(255, 167, 38, 0.1) 0%, rgba(245, 124, 0, 0.1) 100%)",
-//   UNUPDATED:
-//     "linear-gradient(90deg, rgba(239, 83, 80, 0.1) 0%, rgba(211, 47, 47, 0.1) 100%)",
-// };
+// const resourceTypes = {};
 
 CardView.propTypes = {
   data: propTypes.arrayOf(Object),
@@ -35,94 +30,170 @@ CardView.propTypes = {
 
 export default function CardView(props) {
   const [data, setData] = useState(props.data);
+  const [resourceType, setResourceType] = useState("ALL"); // oneOf["ALL", "AVAILABLE", "UNUPDATED", "UNAVAIBALE"]
   if (data === null) {
     setData("");
   }
   const classes = useStyles();
 
-  //   const hoverFunction = function (e) {
-  //     e.target.style.backgroundColor = "rgba(211, 47, 47, 0.1)";
-  //   };
+  const selectResourceType = function (e) {
+    setResourceType(e.target.innerText);
+  };
 
-  //   const hoverRemove = function (e) {
-  //     e.target.style.background = "#ffffff";
-  //   };
-
-  useEffect(() => {}, []);
+  useEffect(() => {}, [resourceType]);
   return (
     <div className={classes.sections}>
       <div className={classes.container}>
         <div className={classes.title}>
           <h2>Resources</h2>
+          <div className={classes.space30} />
+          <Button
+            onClick={selectResourceType}
+            size={isMobile() ? "sm" : "md"}
+            color="primary"
+          >
+            All
+          </Button>
+          <Button
+            onClick={selectResourceType}
+            size={isMobile() ? "sm" : "md"}
+            color="success"
+          >
+            Available
+          </Button>
+          <Button
+            onClick={selectResourceType}
+            size={isMobile() ? "sm" : "md"}
+            color="warning"
+          >
+            unupdated
+          </Button>
+          <Button
+            onClick={selectResourceType}
+            size={isMobile() ? "sm" : "md"}
+            color="danger"
+          >
+            Unavailable
+          </Button>
           <div className={classes.space70} />
         </div>
         <div id="nav-tabs">
           <GridContainer>
             {data.map((details, key) => {
-              return (
-                <GridItem key={key} xs={12} sm={12} md={6}>
-                  {console.log(key)}
-                  <CustomTabs
-                    rtlActive={true}
-                    headerColor={status[details["availability"]]}
-                    tabs={[
-                      {
-                        tabName: "AVAILABILITY",
-                        tabContent: (
-                          <ul className="cardViewList">
-                            {details.resources.map((item, id) => {
-                              return (
-                                <li
-                                  key={id}
-                                  className={status[details["availability"]]}
-                                >
-                                  <div className="data">
-                                    <div className="dataResource">
-                                      <h6>{item.resource}</h6>
+              if (
+                resourceType === "ALL" ||
+                resourceType === details["availability"]
+              ) {
+                return (
+                  <GridItem key={key} xs={12} sm={12} md={6}>
+                    <CustomTabs
+                      headerColor={status[details["availability"]]}
+                      tabs={[
+                        {
+                          tabName: "AVAILABILITY",
+                          tabContent: (
+                            <ul className="cardViewList">
+                              {details.resources.map((item, id) => {
+                                return (
+                                  <li
+                                    key={id}
+                                    className={status[details["availability"]]}
+                                  >
+                                    <div className="data">
+                                      <div className="dataResource">
+                                        <h6>{item.resource}</h6>
+                                      </div>
+                                      <div className="dataQuantity">
+                                        <p>
+                                          <span>{item.quantity} </span>available
+                                        </p>
+                                      </div>
                                     </div>
-                                    <div className="dataQuantity">
-                                      <p>
-                                        <span>{item.quantity} </span>available
-                                      </p>
+                                    <div className="info">
+                                      <div className="updateTag">
+                                        <h6>updated</h6>
+                                      </div>
+                                      <div className="updateInfo">
+                                        <p>
+                                          <span>{item.updated} </span>, 2021
+                                        </p>
+                                      </div>
                                     </div>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          ),
+                        },
+                        {
+                          tabName: "DETAILS",
+                          // tabIcon: Share,
+                          tabContent: (
+                            <ul className="cardViewList">
+                              <li
+                                className={
+                                  status[details["availability"]] + " detail"
+                                }
+                              >
+                                <div className="details">
+                                  <div className="detailsInfo">
+                                    <h6>ADDRESS</h6>
                                   </div>
-                                  <div className="info">
-                                    <div className="updateTag">
-                                      <h6>updated</h6>
-                                    </div>
-                                    <div className="updateInfo">
-                                      <p>
-                                        <span>{item.updated} </span>, 2021
-                                      </p>
-                                    </div>
+                                  <div className="detailsData">
+                                    <p>
+                                      <span>{details.address}</span>
+                                    </p>
                                   </div>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        ),
-                      },
-                      {
-                        tabName: "DETAILS",
-                        // tabIcon: Share,
-                        tabContent: (
-                          <p className={classes.textCenter}>
-                            I think that’s a responsibility that I have, to push
-                            possibilities, to show people, this is the level
-                            that things could be at. I will be the leader of a
-                            company that ends up being worth billions of
-                            dollars, because I got the answers. I understand
-                            culture. I am the nucleus. I think that’s a
-                            responsibility that I have, to push possibilities,
-                            to show people, this is the level that things could
-                            be at.
-                          </p>
-                        ),
-                      },
-                    ]}
-                  />
-                </GridItem>
-              );
+                                </div>
+                              </li>
+                              <li className={status[details["availability"]]}>
+                                <div className="data">
+                                  <div className="dataResource">
+                                    <h6>contact</h6>
+                                  </div>
+                                  <div className="dataQuantity">
+                                    <p>
+                                      <span>{details.contactPersonName}</span>
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="info">
+                                  <div className="updateTag">
+                                    <h6>phone</h6>
+                                  </div>
+                                  <div className="updateInfo">
+                                    <p>
+                                      <span>{details.contactNumber}</span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </li>
+                              <li
+                                className={
+                                  status[details["availability"]] + " detail"
+                                }
+                              >
+                                <div className="details">
+                                  <div className="detailsInfo">
+                                    <h6>{details.serviceName}</h6>
+                                  </div>
+                                  <div className="detailsData">
+                                    <p>
+                                      <span>
+                                        {details.resourceProviderName}
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          ),
+                        },
+                      ]}
+                    />
+                  </GridItem>
+                );
+              }
             })}
           </GridContainer>
         </div>
