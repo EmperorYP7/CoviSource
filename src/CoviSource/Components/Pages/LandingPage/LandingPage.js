@@ -196,7 +196,7 @@ export default function LandingPage(props) {
     ]);
   };
 
-  const renderResroucesCards = function () {
+  const renderResroucesCards = function (data2) {
     return (
       <div
         className={
@@ -205,7 +205,7 @@ export default function LandingPage(props) {
             : classNames(classes.main, classes.mainRaised)
         }
       >
-        <ResourcesCardView data={data} />
+        <ResourcesCardView data={data2} />
       </div>
     );
   };
