@@ -86,7 +86,7 @@ export default function CustomTabs(props) {
           return null;
         })}
       </CardBody>
-      <CardFooter children={footerChildren} />
+      <CardFooter>{footerChildren}</CardFooter>
     </Card>
   );
 }
@@ -110,4 +110,5 @@ CustomTabs.propTypes = {
   ),
   rtlActive: PropTypes.bool,
   plainTabs: PropTypes.bool,
+  footerChildren: PropTypes.node,
 };
