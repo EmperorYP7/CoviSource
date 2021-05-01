@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 
 // core components
-import Header from "components/Header/Header.js";
+import Header from "CoviSource/Components/UtilityComponents/Header/Header";
 
 // import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -14,7 +14,6 @@ import GridItem from "components/Grid/GridItem.js";
 import Parallax from "components/Parallax/Parallax.js";
 
 // sections for the page
-import HeaderLinks from "components/Header/HeaderLinks.js";
 import ResourcesCardView from "CoviSource/Components/UtilityComponents/ResourcesCardSection/CardView";
 // utility components
 import SearchBar from "CoviSource/Components/UtilityComponents/SearchBar/SearchBar";
@@ -196,7 +195,7 @@ export default function LandingPage(props) {
     ]);
   };
 
-  const renderResroucesCards = function (data2) {
+  const renderResroucesCards = function (data) {
     return (
       <div
         className={
@@ -205,25 +204,14 @@ export default function LandingPage(props) {
             : classNames(classes.main, classes.mainRaised)
         }
       >
-        <ResourcesCardView data={data2} />
+        <ResourcesCardView data={data} />
       </div>
     );
   };
 
   return (
     <div>
-      <Header
-        brand="https://raw.githubusercontent.com/EricLiclair/imageHost/e730d59edbca9d8992f90948ae91275e632b9e28/COVISOURCE.svg"
-        // trace tha header folder and update the headerlink.js to edit right links
-        rightLinks={<HeaderLinks />}
-        fixed
-        color="transparent"
-        changeColorOnScroll={{
-          height: 200,
-          color: "primary",
-        }}
-        {...rest}
-      />
+      <Header theme="LIGHT" {...rest} />
       <Parallax
         image={
           "https://github.com/EricLiclair/imageHost/blob/master/bg04.png?raw=true"

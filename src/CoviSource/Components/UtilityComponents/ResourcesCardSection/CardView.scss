@@ -2,7 +2,7 @@
   padding: 0;
   margin: 0;
   list-style: none;
-  cursor: pointer;
+  cursor: arrow;
 
   .detail {
     grid-template-columns: 1fr;
@@ -163,6 +163,14 @@
       rgba(255, 167, 38, 0.1) 0%,
       rgba(245, 124, 0, 0.1) 100%
     );
+  }
+}
+
+.footerLink {
+  cursor: pointer;
+
+  &:hover {
+    color: #495057d5;
   }
 }
 
