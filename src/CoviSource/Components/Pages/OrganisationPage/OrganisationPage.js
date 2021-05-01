@@ -3,6 +3,12 @@ import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 
 import styles from "assets/jss/material-kit-react/views/components.js";
+
+import "./OrganisationPage.scss";
+
+import Header from "CoviSource/Components/UtilityComponents/Header/Header";
+import { logoURL } from "CoviSource/UtilityFunctions";
+import { isMobile } from "CoviSource/UtilityFunctions";
 const useStyles = makeStyles(styles);
 
 const status = {
@@ -10,11 +16,6 @@ const status = {
   UNAVAILABLE: "danger",
   UNUPDATED: "warning",
 };
-
-import "./OrganisationPage.scss";
-
-import Header from "CoviSource/Components/UtilityComponents/Header/Header";
-import { logoURL } from "CoviSource/UtilityFunctions";
 
 export default function OrganisationPage() {
   const classes = useStyles();
@@ -60,7 +61,7 @@ export default function OrganisationPage() {
   console.log(params.orgName);
 
   const getBannerClass = function () {
-    return "banner" + " banner" + status[data.availability];
+    return "banner banner" + status[data.availability];
   };
 
   const scrollChangeData = {
@@ -92,9 +93,7 @@ export default function OrganisationPage() {
                 <li>
                   <div className="resourceList">
                     <div className="infoData">
-                      <h6>
-                        <strong>resources</strong>
-                      </h6>
+                      <h6>resources</h6>
                     </div>
                     <div className="infoValue">
                       <h6>updated</h6>
@@ -127,13 +126,9 @@ export default function OrganisationPage() {
                 <li>
                   <div className="resourceList">
                     <div className="infoData">
-                      <h6>
-                        <strong>contact</strong>
-                      </h6>
+                      <h6>contacts</h6>
                     </div>
-                    <div className="infoValue">
-                      <h6></h6>
-                    </div>
+                    <div className="infoValue"></div>
                   </div>
                 </li>
                 {data.contacts.map((item, id) => {
@@ -142,12 +137,12 @@ export default function OrganisationPage() {
                       <div className="resourceList">
                         <div className="infoData">
                           <h6>
-                            {item.contactPersonName} <br />
+                            <strong>{item.contactPersonName}</strong> <br />
                           </h6>
                         </div>
                         <div className="infoValue">
                           <h6>
-                            {item.contactNumber}
+                            <strong>{item.contactNumber}</strong>
                             <br />
                           </h6>
                         </div>
@@ -162,19 +157,17 @@ export default function OrganisationPage() {
                 <li>
                   <div className="resourceList">
                     <div className="infoData">
-                      <h6>
-                        <strong>Address</strong>
-                      </h6>
+                      <h6>address</h6>
                     </div>
-                    <div className="infoValue">
-                      <h6></h6>
-                    </div>
+                    <div className="infoValue"></div>
                   </div>
                 </li>
                 <li>
                   <div className="resourceList">
                     <div className="infoData">
-                      <h6>{data.address}</h6>
+                      <h6>
+                        <strong>{data.address}</strong>
+                      </h6>
                     </div>
                     <div className="infoValue">
                       <h6>
@@ -196,9 +189,7 @@ export default function OrganisationPage() {
                         </strong>
                       </h6>
                     </div>
-                    <div className="infoValue">
-                      <h6></h6>
-                    </div>
+                    <div className="infoValue"></div>
                   </div>
                 </li>
               </ul>
@@ -206,7 +197,11 @@ export default function OrganisationPage() {
           </div>
         </div>
         <div className="location">
-          <img height="70px" src={logoURL("LIGHT")} alt="" />
+          <img
+            height={isMobile() ? "40px" : "70px"}
+            src={logoURL("LIGHT")}
+            alt=""
+          />
           <h4>Find resources that you need</h4>
         </div>
       </div>

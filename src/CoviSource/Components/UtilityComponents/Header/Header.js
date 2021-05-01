@@ -1,7 +1,7 @@
 import React from "react";
 import propTypes from "prop-types";
 
-import _Header from "components/Header/Header.js";
+import UI_HEADER from "components/Header/Header.js";
 import { logoURL } from "CoviSource/UtilityFunctions";
 
 Header.propTypes = {
@@ -11,7 +11,7 @@ Header.propTypes = {
 export default function Header(props) {
   const { ...rest } = props;
   return (
-    <_Header
+    <UI_HEADER
       brand={logoURL(props.theme)}
       // trace tha header folder and update the headerlink.js to edit right links
       fixed

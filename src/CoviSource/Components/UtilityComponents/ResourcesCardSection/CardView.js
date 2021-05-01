@@ -8,8 +8,8 @@ import propTypes from "prop-types";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Button from "components/CustomButtons/Button";
+import CustomTabs from "CoviSource/Components/UtilityComponents/CustomTabs/CustomTabs.js";
+import Button from "CoviSource/Components/UtilityComponents/Button/Button.js";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/basicsStyle.js";
 import "./CardView.scss";
@@ -38,6 +38,21 @@ export default function CardView(props) {
 
   const selectResourceType = function (e) {
     setResourceType(e.target.innerText);
+  };
+
+  const style = {
+    margin: 0,
+    padding: 0,
+    color: "#fff",
+    cursor: "pointer",
+  };
+
+  const shareIconClick = function (e) {
+    console.log("Shared ", e.target.getAttribute("name"));
+  };
+
+  const moreDetails = function (e) {
+    window.location.href = `/${e.target.getAttribute("name")}`;
   };
 
   useEffect(() => {}, [resourceType]);
@@ -87,6 +102,16 @@ export default function CardView(props) {
                 return (
                   <GridItem key={key} xs={12} sm={12} md={6}>
                     <CustomTabs
+                      title={
+                        <h6 onClick={shareIconClick} style={style}>
+                          {isMobile() ? "" : "share "}
+                          <i
+                            name={details["resourceProviderName"]}
+                            className="fas fa-share"
+                          ></i>
+                        </h6>
+                      }
+                      rtlActive={true}
                       headerColor={status[details["availability"]]}
                       tabs={[
                         {
@@ -190,9 +215,20 @@ export default function CardView(props) {
                           ),
                         },
                       ]}
+                      footerChildren={
+                        <h6
+                          className="footerLink"
+                          onClick={moreDetails}
+                          name={details.resourceProviderName}
+                        >
+                          More details ...
+                        </h6>
+                      }
                     />
                   </GridItem>
                 );
+              } else {
+                return null;
               }
             })}
           </GridContainer>

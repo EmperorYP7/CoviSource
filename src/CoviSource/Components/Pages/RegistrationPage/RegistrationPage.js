@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -8,7 +8,6 @@ import People from "@material-ui/icons/People";
 import Hospital from "@material-ui/icons/LocalHospital";
 import Password from "@material-ui/icons/Lock";
 // core components
-import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
@@ -18,12 +17,12 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 
+import Header from "CoviSource/Components/UtilityComponents/Header/Header";
+
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./RegistrationPage.scss";
 
 import image from "assets/img/bg7.jpg";
-import HeaderLinks from "components/Header/HeaderLinks";
-import Header from "components/Header/Header";
 import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 
 const useStyles = makeStyles(styles);
@@ -31,7 +30,7 @@ const useStyles = makeStyles(styles);
 const center = {
   lat: 19.075983,
   lng: 72.877655,
-}
+};
 
 export default function RegistrationPage(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
@@ -42,6 +41,11 @@ export default function RegistrationPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  const scrollChangeData = {
+    height: 5,
+    color: "white",
+  };
+
   useEffect(() => {
     console.log(position);
   }, [position]);
@@ -49,10 +53,9 @@ export default function RegistrationPage(props) {
   return (
     <div>
       <Header
-        absolute
+        theme="DARK"
         color="transparent"
-        brand="Material Kit React"
-        rightLinks={<HeaderLinks />}
+        changeColorOnScroll={scrollChangeData}
         {...rest}
       />
       <div
@@ -146,7 +149,7 @@ export default function RegistrationPage(props) {
                       }}
                     />
                     {/* <MapSearch setter={setPosition} currentPosition={position} panTo={panTo}/> */}
-                    <Map setter={setPosition} currentPosition={position}/>
+                    <Map setter={setPosition} currentPosition={position} />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg">
@@ -158,7 +161,6 @@ export default function RegistrationPage(props) {
             </GridItem>
           </GridContainer>
         </div>
-        <Footer whiteFont />
       </div>
     </div>
   );
