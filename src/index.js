@@ -10,7 +10,8 @@ import Components from "views/Components/Components.js";
 // import LandingPage from "views/LandingPage/LandingPage.js";
 // import ProfilePage from "views/ProfilePage/ProfilePage.js";
 // import LoginPage from "views/LoginPage/LoginPage.js";
-import LandingPage from "./CoviSource/Components/Pages/LandingPage/LandingPage";
+import LandingPage from "CoviSource/Components/Pages/LandingPage/LandingPage";
+import OrganisationPage from "CoviSource/Components/Pages/OrganisationPage/OrganisationPage";
 
 var hist = createBrowserHistory();
 
@@ -21,6 +22,7 @@ ReactDOM.render(
       <Route path="/profile-page" component={ProfilePage} />
       <Route path="/login-page" component={LoginPage} /> */}
       <Route exact path="/" component={LandingPage} />
+      <Route exact path="/:orgName" component={OrganisationPage} />
       <Route path="/components" component={Components} />
     </Switch>
   </Router>,
