@@ -33,6 +33,7 @@ Map.propTypes = {
   height: propTypes.string,
   zoom: propTypes.number || undefined,
   search: propTypes.bool || undefined,
+  mapSearch: propTypes.bool,
 };
 
 function Map(props) {
@@ -44,6 +45,7 @@ function Map(props) {
     height,
     zoom,
     search,
+    mapSearch,
   } = props;
   const { isLoaded, loadError } = useLoadScript(config);
   const [position, setPosition] = useState({
@@ -79,9 +81,11 @@ function Map(props) {
 
   return (
     <div className="gmap">
-      <div className="mapsearch">
-        {search && <MapSearch currentPosition={position} panTo={panTo} />}
-      </div>
+      {mapSearch ? (
+        <div className="mapsearch">
+          {search && <MapSearch currentPosition={position} panTo={panTo} />}
+        </div>
+      ) : null}
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={zoom ? zoom : 10}

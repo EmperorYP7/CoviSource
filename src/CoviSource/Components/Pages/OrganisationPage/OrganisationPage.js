@@ -208,8 +208,8 @@ export default function OrganisationPage() {
             width={isMobile() ? "100vw" : "50vw"}
             currentPosition={data.location}
             zoom={14}
+            mapSearch={false}
           />
-          <h4>Find resources that you need</h4>
         </div>
       </div>
     </>
