@@ -208,7 +208,7 @@ export default function OrganisationPage() {
             width={isMobile() ? "100vw" : "50vw"}
             currentPosition={data.location}
             zoom={14}
-            mapSearch={false}
+            hideMapSearch={true}
           />
         </div>
       </div>
