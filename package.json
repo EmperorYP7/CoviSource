@@ -1,5 +1,5 @@
 {
-  "name": "covid-helper",
+  "name": "covisource",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -64,6 +64,17 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmperorYP7/CoviSource.git"
+  },
+  "keywords": [],
+  "author": "Yash Pandey",
+  "license": "MIT",
+  "homepage": "https://covisource.tech",
+  "bugs": {
+    "url": "https://github.com/EmperorYP7/CoviSource/issues"
   },
   "browserslist": {
     "production": [

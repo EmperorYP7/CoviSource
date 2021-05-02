@@ -21,6 +21,8 @@ import SearchBar from "CoviSource/Components/UtilityComponents/SearchBar/SearchB
 import styles from "assets/jss/material-kit-react/views/components.js";
 
 import { isMobile } from "CoviSource/UtilityFunctions";
+import coviLogo from "assets/img/logo.svg";
+import bgImage from "assets/img/bg.jpg";
 
 const useStyles = makeStyles(styles);
 
@@ -212,18 +214,14 @@ export default function LandingPage(props) {
   return (
     <div>
       <Header theme="LIGHT" {...rest} />
-      <Parallax
-        image={
-          "https://github.com/EricLiclair/imageHost/blob/master/bg04.png?raw=true"
-        }
-      >
+      <Parallax image={bgImage}>
         <div className={classes.container}>
           <GridContainer>
             <GridItem>
               <div className={classes.brand}>
                 <h1 className={classes.title}>
                   <img
-                    src="https://raw.githubusercontent.com/EricLiclair/imageHost/e730d59edbca9d8992f90948ae91275e632b9e28/COVISOURCE.svg"
+                    src={coviLogo}
                     height={isMobile() ? "35px" : "62px"}
                     alt=""
                   />
