@@ -149,7 +149,14 @@ export default function RegistrationPage(props) {
                       }}
                     />
                     {/* <MapSearch setter={setPosition} currentPosition={position} panTo={panTo}/> */}
-                    <Map setter={setPosition} currentPosition={position} />
+                    <Map
+                      search
+                      useGeolocation
+                      width={`20em`}
+                      height={`20em`}
+                      setter={setPosition}
+                      currentPosition={position}
+                    />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg">

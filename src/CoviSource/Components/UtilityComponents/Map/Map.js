@@ -19,11 +19,6 @@ const config = {
   libraries: ["places"],
 };
 
-const mapContainerStyle = {
-  width: "20vw",
-  height: "20vh",
-};
-
 const options = {
   styles: styles,
   disableDefaultUI: true,
@@ -32,19 +27,35 @@ const options = {
 
 Map.propTypes = {
   currentPosition: propTypes.object,
-  setter: propTypes.func,
-  setpanTo: propTypes.any,
+  setter: propTypes.func || undefined,
+  setpanTo: propTypes.any || undefined,
+  width: propTypes.string,
+  height: propTypes.string,
+  zoom: propTypes.number || undefined,
+  search: propTypes.bool || undefined,
 };
 
 function Map(props) {
-  const { currentPosition, setter, setpanTo } = props;
+  const {
+    currentPosition,
+    setter,
+    setpanTo,
+    width,
+    height,
+    zoom,
+    search,
+  } = props;
   const { isLoaded, loadError } = useLoadScript(config);
   const [position, setPosition] = useState({
     lat: currentPosition.lat,
     lng: currentPosition.lng,
   });
+  const mapContainerStyle = {
+    width: width ? width : "20vw",
+    height: height ? height : "20vh",
+  };
   const onLoad = () => {
-    setter(position);
+    setter ? setter(position) : null;
   };
   const mapRef = useRef();
 
@@ -69,13 +80,14 @@ function Map(props) {
   return (
     <div className="gmap">
       <div className="mapsearch">
-        <MapSearch currentPosition={position} panTo={panTo} />
+        {search && <MapSearch currentPosition={position} panTo={panTo} />}
       </div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={10}
+        zoom={zoom ? zoom : 10}
         center={position}
         options={options}
+        className="map-container"
         onLoad={onMapLoad}
       >
         <Marker onLoad={onLoad} position={position} />

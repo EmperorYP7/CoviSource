@@ -7,8 +7,9 @@ import styles from "assets/jss/material-kit-react/views/components.js";
 import "./OrganisationPage.scss";
 
 import Header from "CoviSource/Components/UtilityComponents/Header/Header";
-import { logoURL } from "CoviSource/UtilityFunctions";
+// import { logoURL } from "CoviSource/UtilityFunctions";
 import { isMobile } from "CoviSource/UtilityFunctions";
+import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 const useStyles = makeStyles(styles);
 
 const status = {
@@ -21,7 +22,7 @@ export default function OrganisationPage() {
   const classes = useStyles();
   const data = {
     username: "someUsername",
-    resourceProviderName: "Resource Provider Name",
+    resourceProviderName: "Fortis Hospital, Kalyan",
     availability: "AVAILABLE",
     resources: [
       {
@@ -40,22 +41,27 @@ export default function OrganisationPage() {
         updated: "06:00 PM, 27 APRIL",
       },
     ],
-    address: "Provider Address",
+    address:
+      "Fortis Hospital,\n Near Kalyan Market,\n Kalyan West,\n Maharashtra, India - 421306",
     contacts: [
       {
-        contactPersonName: "Contact Person's Name 1",
+        contactPersonName: "Dr. Gaurav Bhatt",
         contactNumber: "9821095754",
       },
       {
-        contactPersonName: "Contact Person's Name 2",
+        contactPersonName: "Dr. Ashok Bhoir",
         contactNumber: "9821095754",
       },
       {
-        contactPersonName: "Contact Person's Name 3",
+        contactPersonName: "Dr. Rupender Singh Sodhi",
         contactNumber: "9821095754",
       },
     ],
     serviceName: "Service Provided",
+    location: {
+      lat: 19.21832,
+      lng: 73.1273,
+    },
   };
   const params = useParams();
   console.log(params.orgName);
@@ -197,10 +203,11 @@ export default function OrganisationPage() {
           </div>
         </div>
         <div className="location">
-          <img
-            height={isMobile() ? "40px" : "70px"}
-            src={logoURL("LIGHT")}
-            alt=""
+          <Map
+            height={"100vh"}
+            width={isMobile() ? "100vw" : "50vw"}
+            currentPosition={data.location}
+            zoom={14}
           />
           <h4>Find resources that you need</h4>
         </div>
