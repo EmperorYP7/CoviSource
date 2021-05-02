@@ -4,7 +4,7 @@ const componentsStyle = {
   container,
   brand: {
     color: "#FFFFFF",
-    textAlign: "left",
+    textAlign: "center",
   },
   title: {
     fontSize: "4.2rem",
@@ -32,6 +32,10 @@ const componentsStyle = {
     textDecoration: "none",
   },
   textCenter: {
+    textAlign: "center",
+  },
+  subtitleReduced: {
+    fontSize: `${window.innerWidth < 768 ? "14px" : "21px"}`,
     textAlign: "center",
   },
 };

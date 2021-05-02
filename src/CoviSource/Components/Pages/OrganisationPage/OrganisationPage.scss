@@ -1,0 +1,206 @@
+.orgView {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 100vh;
+  grid-template-areas: "information location";
+  color: #495057;
+
+  .information {
+    padding-top: 100px;
+    grid-area: information;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows:
+      auto
+      auto;
+    grid-template-areas:
+      "header"
+      "info";
+
+    .header {
+      grid-area: header;
+      display: grid;
+      grid-template-columns: auto 0.9fr;
+      grid-template-areas: "banner headinfo";
+
+      .banner {
+        grid-area: banner;
+        height: 100%;
+        border-radius: 0px 6px 6px 0px;
+      }
+
+      .bannersuccess {
+        background: linear-gradient(
+          90deg,
+          rgba(102, 187, 106) 0%,
+          rgba(56, 142, 60) 100%
+        );
+      }
+      .bannerdanger {
+        background: linear-gradient(
+          90deg,
+          rgba(239, 83, 80) 0%,
+          rgba(211, 47, 47) 100%
+        );
+      }
+      .bannerwarning {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 167, 38) 0%,
+          rgba(245, 124, 0) 100%
+        );
+      }
+
+      .headInfo {
+        grid-area: headinfo;
+        padding: 0px 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        h6 {
+          font-style: normal;
+          font-weight: normal;
+          margin: 0;
+          padding: 0;
+          font-size: 16px;
+        }
+
+        h2 {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    .info {
+      grid-area: info;
+      display: grid;
+      grid-template-columns: auto 0.9fr;
+      grid-template-areas: "spacer infocontainer";
+
+      .infoContainer {
+        grid-area: infocontainer;
+        padding: 0px 15px;
+
+        ul {
+          list-style-type: none;
+          list-style: none;
+          padding: 0;
+          margin-bottom: 15px;
+
+          li {
+            margin: 0;
+
+            .resourceList {
+              display: grid;
+              grid-template-columns: 0.6fr 0.4fr;
+              grid-template-areas: "infodata infovalue";
+
+              .infoData {
+                grid-area: infodata;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+              }
+
+              .infoValue {
+                grid-area: infovalue;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+
+                h6 {
+                  text-align: end;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .location {
+    grid-area: location;
+    background-color: #9c27b0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h4 {
+      color: #fff;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .orgView {
+    grid-template-columns: 1fr;
+    grid-template-rows:
+      100vh
+      100vh;
+    grid-template-areas:
+      "information"
+      "location";
+
+    .information {
+      .header {
+        grid-template-columns: 30px auto;
+
+        .headInfo {
+          h6 {
+            font-size: 10px;
+          }
+
+          h2 {
+            font-size: 24px;
+          }
+        }
+      }
+      .info {
+        grid-template-columns: 1fr;
+        grid-template-areas: "infocontainer";
+
+        .infoContainer {
+          padding: 0px 30px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .orgView {
+    grid-template-columns: 1fr;
+    grid-template-rows:
+      100vh
+      100vh;
+    grid-template-areas:
+      "information"
+      "location";
+
+    .information {
+      .header {
+        grid-template-columns: 15px auto;
+
+        .headInfo {
+          h6 {
+            font-size: 10px;
+          }
+
+          h2 {
+            font-size: 24px;
+          }
+        }
+      }
+      .info {
+        grid-template-columns: 1fr;
+        grid-template-areas: "infocontainer";
+      }
+    }
+  }
+}

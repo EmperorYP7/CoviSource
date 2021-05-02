@@ -1,50 +1,37 @@
-##### Add new pages to the `components/Pages/"PageName_Dir` directory.
+# CoviSource - Real-time Resources for COVID-19
 
-##### Add the components required by the "pages" to `components/UtilityComponents/"ComponentName_Dir"` directory
 
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Software License](https://img.shields.io/github/license/EmperorYP7/CoviSource?style=for-the-badge&logo=appveyor)](./LICENSE)
+![Stars](https://img.shields.io/github/stars/EmperorYP7/CoviSource?style=for-the-badge&logo=appveyor)
 
-## Available Scripts
+![banner](./src/assets/img/banner.png)
 
-In the project directory, you can run:
+A collection of resources for COVID-19 updated in real time by the frontline providers
+themselves to help in bridging the gap between the patient and resources. :rocket:
 
-### `yarn start`
+## Why this Website?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Amidst the ongoing pandemic, we need reliable and real time updates for all the resources to 
+help COVID patients save precious time and their lives. :white_check_mark:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![website](./src/assets/img/website.png)
 
-### `yarn test`
+This is thought to be achieved through the collective efforts of doctors,
+nurses, volunteers and other health workers to update about the available
+resources in their medical institute/provider directly into this website. :couple:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We hope to bring a positive change in these depressing times and strive
+to help everyone get over this situation through this open-source initiative. :sparkles:
 
-### `yarn build`
+## Contributors
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+We would be glad to recieve your help and make this website even better for the ones suffering 
+from COVID. Your help can save many lives. :pray:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You may contribute through submitting some code, reporting some bugs/issues, spreading
+awareness about this website to your local medical institutes, sharing about this website
+on social media or donating funds to the project.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+For submitting code and bugs/issues, kindly go through our 
+[Contribution Guidelines](/.github/CONTRIBUTING.md).
