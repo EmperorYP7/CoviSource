@@ -1,47 +1,66 @@
 import { Provider } from '../entities/Provider';
-import { MyContext } from '../types';
-import { Arg, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
 import slugify from 'slugify';
+import { User } from 'src/entities/User';
+
+type ResourceTemplate = {
+    name: string;
+    quantity: number;
+}
+
+type LocationTemplate = {
+    latitude: number;
+    longitude: number;
+}
+
+@InputType()
+class NewProviderInput {
+    @Field()
+    providerName: string;
+
+    @Field()
+    address: string;
+
+    @Field()
+    resources: Array<ResourceTemplate>;
+
+    @Field()
+    location: LocationTemplate;
+
+    @Field()
+    owner: User;
+};
 
 @Resolver()
 export class ProviderResolver {
     @Query(() => [Provider])
-    providers(@Ctx() {em}: MyContext): Promise<Provider[]> {
-        return em.find(Provider, {});
+    providers(): Promise<Provider[]> {
+        return Provider.find();
     }
 
     @Query(() => Provider, { nullable: true })
     findProvider(
         @Arg('id', () => Int) id: number,
-        @Ctx() { em }: MyContext
-    ): Promise<Provider | null> {
-        return em.findOne(Provider, { _id: id });
+    ): Promise<Provider | undefined> {
+        return Provider.findOne(id);
     }
 
     @Mutation(() => Provider)
-    async createProvider(
-        @Arg('providerName', () => String) providerName: string,
-        @Ctx() { em }: MyContext
-    ): Promise<Provider> {
-        const provider = em.create(Provider, { providerName: providerName, slug: slugify(providerName) });
-        await em.persistAndFlush(provider);
-        return provider;
+    async createProvider(@Arg('providerName', () => String) providerName: string): Promise<Provider> {
+        return Provider.create({ providerName: providerName, slug: slugify(providerName) }).save();
     }
 
     @Mutation(() => Provider, {nullable: true})
     async updateProvider(
         @Arg('id', () => Int) id: number,
         @Arg('providerName', () => String) providerName: string,
-        @Ctx() { em }: MyContext
     ): Promise<Provider | null> {
-        const provider = await em.findOne(Provider, { _id: id });
+        const provider = await Provider.findOne(id);
         if (!provider) {
             return null;
         }
         if (typeof providerName !== 'undefined') {
-            provider.providerName = providerName;
-            provider.slug = slugify(providerName);
-            await em.persistAndFlush(provider);
+            await Provider.update(id, {providerName: providerName, slug: slugify(providerName)})
         }
         return provider;
     }
@@ -49,10 +68,9 @@ export class ProviderResolver {
     @Mutation(() => Boolean, {nullable: true})
     async deleteProvider(
         @Arg('id', () => Int) id: number,
-        @Ctx() { em }: MyContext
     ): Promise<boolean> {
         try {
-            await em.nativeDelete(Provider, { _id: id });
+            await Provider.delete(id);
         } catch {
             return false;
         }

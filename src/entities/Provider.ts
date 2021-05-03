@@ -1,34 +1,51 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import slugify from "slugify";
+
 import { Field, Int, ObjectType } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Location } from "./Location";
+import { Resource } from "./Resource";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
-export class Provider {
-    @Field(() => Int)
-    @PrimaryKey()
-    _id!: number;
+export class Provider extends BaseEntity {
 
     @Field(() => String)
-    @Property({ type: 'date', default: 'NOW()' })
-    createdAt = new Date();
-
-    @Field(() => String)
-    @Property({ type: 'date', onUpdate: () => new Date(), default: 'NOW()' })
-    updatedAt = new Date();
-
-    @Field(() => String)
-    @Property({ type: 'text' })
+    @Column()
     providerName!: string;
 
     @Field(() => String)
-    @Property({ type: 'text' })
+    @Column()
+    address!: string;
+
+    @Field(() => String)
+    @Column({ unique: true })
     slug!: string;
 
-    // @Property()
-    // location: Geolocation;
+    @Field(() => [Resource])
+    @OneToMany(() => Resource, resource => resource.provider)
+    resources: Resource[];
 
-    // @Property()
-    // adhaar: number;
+    @Field(() => Location)
+    @Column(() => Location)
+    location: Location;
 
+    @Field()
+    @Column()
+    ownerID: number;
+
+    @OneToOne(() => User, user => user.provider)
+    @JoinColumn()
+    owner: User;
+
+    @Field(() => Int)
+    @PrimaryGeneratedColumn()
+    _id!: number;
+
+    @Field(() => String)
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Field(() => String)
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

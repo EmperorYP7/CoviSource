@@ -3,6 +3,7 @@ import { MyContext } from '../types';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
+import { getConnection } from 'typeorm';
 
 @InputType()
 class UsernamePasswordInput {
@@ -51,27 +52,24 @@ class UserResponse {
 export class UserResolver {
 
     @Query(() => User, { nullable: true })
-    async me(
-        @Ctx() { req, em } : MyContext
-    ) {
+    async me(@Ctx() { req } : MyContext): Promise<User | undefined | null> {
         // Not logged in
         if (!req.session.userID) {
             return null;
         }
-        const user = em.findOne(User, { _id: req.session.userID });
-        return user;
+        return User.findOne({ where: { _id: req.session.userID } });
     }
 
     @Mutation(() => UserResponse)
     async register(
         @Arg('input') input: UserRegisterInput,
-        @Ctx() { em, req }: MyContext
+        @Ctx() { req }: MyContext
     ): Promise<UserResponse> {
-        if (input.email.length <= 4) {
+        if (input.email.length <= 4 || !input.email.includes('@')) {
             return {
                 errors: [{
-                    field: "username",
-                    message: "Username too small"
+                    field: "email",
+                    message: "Invalid emailID"
                 }]
             }
         }
@@ -100,25 +98,32 @@ export class UserResolver {
             }
         }
         const hasedPassword = await argon2.hash(input.password);
-        const user = em.create(User, {
-            email: input.email,
-            password: hasedPassword,
-            name: input.name,
-            contactNumber: input.contactNumber
-        });
+        let user;
         try {
-            await em.persistAndFlush(user);
+            const result = await getConnection()
+                .createQueryBuilder()
+                .insert()
+                .into(User)
+                .values([{
+                    email: input.email,
+                    password: hasedPassword,
+                    name: input.name,
+                    contactNumber: input.contactNumber
+                }])
+                .returning('*')
+                .execute();
+            user = result.raw;
         } catch (err) {
-            // Duplicate user error
             if (err.code === '23505') {
                 return {
-                    errors: [{
-                        field: "email",
-                        message: "This user already exists!"
-                    }]
+                    errors: [
+                        {
+                            field: "email",
+                            message: "This email is already registered!"
+                        }
+                    ]
                 }
             }
-            console.log(err);
         }
 
         // Store userID session
@@ -130,9 +135,9 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async login(
         @Arg('input') input: UsernamePasswordInput,
-        @Ctx() {em, req} : MyContext
+        @Ctx() {req} : MyContext
     ) : Promise<UserResponse> {
-        const user = await em.findOne(User, { email: input.email });
+        const user = await User.findOne({where: { email: input.email }});
         if (!user) {
             return {
                 errors: [{
@@ -150,9 +155,7 @@ export class UserResolver {
                 }]
             }
         }
-
         req.session.userID = user._id;
-
         return { user };
     }
 

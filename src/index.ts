@@ -1,35 +1,42 @@
 import 'reflect-metadata';
-import { MikroORM } from "@mikro-orm/core";
-import mikroConfig from "./mikro-orm.config";
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { ProviderResolver } from "./resolvers/Provider";
 import { UserResolver } from './resolvers/User';
-import redis from 'redis';
+import Redis from 'ioredis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { __prod__ } from './constants';
+import { COOKIE_MAX_AGE, COOKIE_NAME, __prod__ } from './constants';
 import { MyContext } from './types';
+import { createConnection } from 'typeorm';
+import config from './typeorm.config';
+import cors from 'cors';
 
 const main = async () => {
-    const orm = await MikroORM.init(mikroConfig);
-    await orm.getMigrator().up();
+    await createConnection(config);
 
     const app = express();
 
     const RedisStore = connectRedis(session);
-    const redisClient = redis.createClient();
+    const redis = new Redis();
+
+    app.use(
+        cors({
+            origin: 'http://localhost:3000',
+            credentials: true,
+        })
+    )
 
     app.use(
         session({
-            name: 'qid',
+            name: COOKIE_NAME,
             store: new RedisStore({
-                client: redisClient,
+                client: redis,
                 disableTouch: true
             }),
             cookie: {
-                maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+                maxAge: COOKIE_MAX_AGE,
                 httpOnly: true,
                 secure: __prod__,
                 sameSite: 'lax'
@@ -45,7 +52,7 @@ const main = async () => {
             resolvers: [ProviderResolver, UserResolver],
             validate: false
         }),
-        context: ({ req, res }) : MyContext => ({ em: orm.em, req, res })
+        context: ({ req, res }) : MyContext => ({ req, res, redis })
     });
 
     apolloServer.applyMiddleware({ app }); 

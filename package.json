@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "yarn create:migration && nodemon dist/index.js",
+    "dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
     "start2": "ts-node src/index.ts",
     "dev2": "nodemon --exec ts-node src/index.ts",
-    "create:migration": "mikro-orm migration:create"
+    "create:migration": "typeorm migration:create"
   },
   "mikro-orm": {
     "useTsNode": true,
@@ -24,7 +24,7 @@
   },
   "keywords": [],
   "author": "Yash Pandey",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/EmperorYP7/CoviSource/issues"
   },
@@ -48,13 +48,16 @@
     "argon2": "^0.27.2",
     "class-validator": "^0.13.1",
     "connect-redis": "^5.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "graphql": "^15.5.0",
+    "ioredis": "^4.27.1",
     "pg": "^8.6.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "slugify": "^1.5.0",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "typeorm": "^0.2.32"
   }
 }
