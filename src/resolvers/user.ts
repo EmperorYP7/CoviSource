@@ -101,17 +101,17 @@ export class UserResolver {
         let user;
         try {
             const result = await getConnection()
-                .createQueryBuilder()
-                .insert()
-                .into(User)
-                .values([{
-                    email: input.email,
-                    password: hasedPassword,
-                    name: input.name,
-                    contactNumber: input.contactNumber
-                }])
-                .returning('*')
-                .execute();
+                        .createQueryBuilder()
+                        .insert()
+                        .into(User)
+                        .values([{
+                            email: input.email,
+                            password: hasedPassword,
+                            name: input.name,
+                            contactNumber: input.contactNumber,
+                            providerID: req.session.providerID || undefined,
+                        }])
+                        .execute();
             user = result.raw;
         } catch (err) {
             if (err.code === '23505') {
@@ -126,6 +126,16 @@ export class UserResolver {
             }
         }
 
+        if (typeof user === 'undefined') {
+            return {
+                errors: [
+                    {
+                        field: "password",
+                        message: "Not a valid password"
+                    }
+                ]
+            }
+        }
         // Store userID session
         req.session.userID = user._id;
 

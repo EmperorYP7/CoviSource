@@ -10,14 +10,6 @@ export class User extends BaseEntity {
     _id!: number;
 
     @Field(() => String)
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @Field(() => String)
-    @UpdateDateColumn()
-    updatedAt: Date;
-
-    @Field(() => String)
     @Column({ unique: true })
     email!: string;
 
@@ -29,10 +21,22 @@ export class User extends BaseEntity {
     @Column({})
     name!: string;
 
+    @Field(() => Int, { nullable: true })
+    @Column({ nullable: true })
+    providerID: number;
+
     @OneToOne(() => Provider, provider => provider.owner)
     @JoinColumn()
-    provider!: Provider;
+    provider: Provider;
 
-    @Column({})
+    @Column()
     password!: string;
+
+    @Field(() => String)
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Field(() => String)
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

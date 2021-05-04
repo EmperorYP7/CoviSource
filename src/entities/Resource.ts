@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, CreateDateColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Provider } from "./Provider";
 
 @ObjectType()
+@Entity()
 export class Resource {
     @Field(() => String)
     @Column()
@@ -13,14 +14,12 @@ export class Resource {
     quantity: number;
 
     @Field(() => Int)
-    @Column({ type: 'int' })
+    @PrimaryColumn()
     providerID: number;
 
     @ManyToOne(() => Provider, provider => provider.resources)
+    @JoinColumn()
     provider: Provider;
-
-    @PrimaryGeneratedColumn()
-    _id!: number;
 
     @Field(() => String)
     @CreateDateColumn()

@@ -1,16 +1,24 @@
 import { Provider } from '../entities/Provider';
-import { Arg, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
 import slugify from 'slugify';
-import { User } from 'src/entities/User';
+import { MyContext } from 'src/types';
 
-type ResourceTemplate = {
-    name: string;
-    quantity: number;
+@InputType()
+class LocationTemplate {
+    @Field()
+    latitude: number;
+
+    @Field()
+    longitude: number;
 }
 
-type LocationTemplate = {
-    latitude: number;
-    longitude: number;
+@InputType()
+class ContactTemplate {
+    @Field()
+    name: string;
+
+    @Field()
+    number: string;
 }
 
 @InputType()
@@ -21,15 +29,12 @@ class NewProviderInput {
     @Field()
     address: string;
 
-    @Field()
-    resources: Array<ResourceTemplate>;
-
-    @Field()
+    @Field(() => LocationTemplate)
     location: LocationTemplate;
 
-    @Field()
-    owner: User;
-};
+    @Field(() => [ContactTemplate])
+    contacts: [ContactTemplate];
+}
 
 @Resolver()
 export class ProviderResolver {
@@ -46,8 +51,28 @@ export class ProviderResolver {
     }
 
     @Mutation(() => Provider)
-    async createProvider(@Arg('providerName', () => String) providerName: string): Promise<Provider> {
-        return Provider.create({ providerName: providerName, slug: slugify(providerName) }).save();
+    async createProvider(
+        @Arg('input') input: NewProviderInput,
+        @Ctx() { req }: MyContext
+        // @UseMiddleware(onAuth)
+    ): Promise<Provider | undefined> {
+        if (typeof req.session.providerID !== 'undefined') {
+            throw Error("Provider already created!");
+        }
+        var provider;
+        try {
+            provider = await Provider.create({
+                ...input,
+                location: input.location,
+                slug: slugify(input.providerName),
+                ownerID: req.session.userID,
+                resources: [],
+            }).save();
+        } catch {
+            return undefined;
+        }
+        req.session.providerID = provider._id;
+        return provider;
     }
 
     @Mutation(() => Provider, {nullable: true})
@@ -60,7 +85,7 @@ export class ProviderResolver {
             return null;
         }
         if (typeof providerName !== 'undefined') {
-            await Provider.update(id, {providerName: providerName, slug: slugify(providerName)})
+            await Provider.update(id, { providerName: providerName, slug: slugify(providerName) });
         }
         return provider;
     }
