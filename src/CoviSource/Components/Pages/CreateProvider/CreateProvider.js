@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useReducer, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
-import Email from "@material-ui/icons/Email";
-import People from "@material-ui/icons/People";
-// import Hospital from "@material-ui/icons/LocalHospital";
-import Password from "@material-ui/icons/Lock";
+import LocationCity from "@material-ui/icons/LocationCity";
+// import People from "@material-ui/icons/People";
+import Hospital from "@material-ui/icons/LocalHospital";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -20,15 +19,26 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Header from "CoviSource/Components/UtilityComponents/Header/Header";
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
-import "./RegistrationPage.scss";
+import "./CreateProvider.scss";
 
-import image from "assets/img/bg2.jpg";
+import image from "assets/img/bg7.jpg";
+// import CreateContact from "./CreateContact";
+// import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 
 const useStyles = makeStyles(styles);
 
-export default function RegistrationPage(props) {
-  const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-  // const [position, setPosition] = useState(center);
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
+
+export default function CreateProvider(props) {
+  const [formData, setFormData] = useReducer(formReducer, {});
+  // const [resourceData, setresourceData] = useReducer(formReducer, {});
+  const [cardAnimaton, setCardAnimation] = useState("cardHidden");
+
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
@@ -40,8 +50,22 @@ export default function RegistrationPage(props) {
     color: "white",
   };
 
+  const handleChange = (event) => {
+    setFormData({
+      name: event.target.name,
+      value: event.target.value,
+    });
+    console.log(formData);
+  };
+
+  const handleSubmit = (event) => {
+    console.log(formData);
+    event.preventDefault();
+    // console.log(resourceData);
+  };
+
   return (
-    <div>
+    <div className="create-provider">
       <Header
         theme="DARK"
         color="transparent"
@@ -62,24 +86,14 @@ export default function RegistrationPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Register Yourself</h4>
-                    <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
-                      </Button>
-                    </div>
+                    <h4>Register your Institute/Provider</h4>
                   </CardHeader>
-                  <p className={classes.divider}>Or Be Classical</p>
                   <CardBody>
                     <CustomInput
-                      labelText="First Name..."
-                      id="name"
+                      labelText="Name of institute/provider"
+                      id="providerName"
+                      name="providerName"
+                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -87,62 +101,83 @@ export default function RegistrationPage(props) {
                         type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
-                            <People className={classes.inputIconsColor} />
+                            <Hospital className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
                       }}
                     />
                     <CustomInput
-                      labelText="Email..."
-                      id="email"
+                      labelText="Address of provider"
+                      id="address"
+                      name="address"
+                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
-                        type: "email",
+                        type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Email className={classes.inputIconsColor} />
+                            <LocationCity className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
                       }}
                     />
                     <CustomInput
-                      labelText="Password"
-                      id="password"
+                      labelText="Location: Latitude"
+                      id="latitude"
+                      name="latitude"
+                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
-                        type: "password",
+                        type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Password className={classes.inputIconsColor} />
+                            <LocationCity className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
                         autoComplete: "off",
                       }}
                     />
                     <CustomInput
-                      labelText="Contact Number"
-                      id="contactNo"
+                      labelText="Location: Longitude"
+                      id="longitude"
+                      name="longitude"
+                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
-                        type: "password",
+                        type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Password className={classes.inputIconsColor} />
+                            <LocationCity className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
                         autoComplete: "off",
                       }}
                     />
                   </CardBody>
+                  <Button className="add-resource-button">
+                    + Add Resources
+                  </Button>
+                  <Button className="add-contact-button">+ Add Contacts</Button>
+                  {/* <CreateContact
+                    classes={classes}
+                    resourceData={resourceData}
+                    setresourceData={setresourceData}
+                  /> */}
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
-                      Get started
+                    <Button
+                      simple
+                      color="primary"
+                      size="lg"
+                      type="submit"
+                      onSubmit={handleSubmit}
+                    >
+                      Register
                     </Button>
                   </CardFooter>
                 </form>

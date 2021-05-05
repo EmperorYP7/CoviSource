@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
-import People from "@material-ui/icons/People";
 // import Hospital from "@material-ui/icons/LocalHospital";
 import Password from "@material-ui/icons/Lock";
 // core components
@@ -20,13 +19,21 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Header from "CoviSource/Components/UtilityComponents/Header/Header";
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
-import "./RegistrationPage.scss";
+import "./Login.scss";
 
-import image from "assets/img/bg2.jpg";
+import image from "assets/img/bg7.jpg";
+// import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 
 const useStyles = makeStyles(styles);
 
-export default function RegistrationPage(props) {
+// const center = {
+//   lat: 19.075983,
+//   lng: 72.877655,
+//   +919167260712
+//   Yash Pandey
+// };
+
+export default function Login(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   // const [position, setPosition] = useState(center);
   setTimeout(function () {
@@ -62,7 +69,7 @@ export default function RegistrationPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Register Yourself</h4>
+                    <h4>Login</h4>
                     <div className={classes.socialLine}>
                       <Button
                         justIcon
@@ -77,21 +84,6 @@ export default function RegistrationPage(props) {
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
                   <CardBody>
-                    <CustomInput
-                      labelText="First Name..."
-                      id="name"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        type: "text",
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <People className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
                     <CustomInput
                       labelText="Email..."
                       id="email"
@@ -109,23 +101,7 @@ export default function RegistrationPage(props) {
                     />
                     <CustomInput
                       labelText="Password"
-                      id="password"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        type: "password",
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Password className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        ),
-                        autoComplete: "off",
-                      }}
-                    />
-                    <CustomInput
-                      labelText="Contact Number"
-                      id="contactNo"
+                      id="pass"
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -142,7 +118,7 @@ export default function RegistrationPage(props) {
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg">
-                      Get started
+                      Lets Save Lives!
                     </Button>
                   </CardFooter>
                 </form>
