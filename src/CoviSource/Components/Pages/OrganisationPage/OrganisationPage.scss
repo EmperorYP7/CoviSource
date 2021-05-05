@@ -125,15 +125,11 @@
 
   .location {
     grid-area: location;
-    background-color: #9c27b0;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    h4 {
-      color: #fff;
-    }
   }
 }
 
