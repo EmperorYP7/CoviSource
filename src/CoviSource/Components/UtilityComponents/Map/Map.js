@@ -15,7 +15,7 @@ import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import styles from "./Map.style";
 
 const config = {
-  googleMapsApiKey: "AIzaSyCxttBHhvoDHLXbUgnMtjO3OVDw46iFSQw",
+  googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   libraries: ["places"],
 };
 
@@ -33,6 +33,7 @@ Map.propTypes = {
   height: propTypes.string,
   zoom: propTypes.number || undefined,
   search: propTypes.bool || undefined,
+  hideMapSearch: propTypes.bool,
 };
 
 function Map(props) {
@@ -44,6 +45,7 @@ function Map(props) {
     height,
     zoom,
     search,
+    hideMapSearch,
   } = props;
   const { isLoaded, loadError } = useLoadScript(config);
   const [position, setPosition] = useState({
@@ -79,9 +81,11 @@ function Map(props) {
 
   return (
     <div className="gmap">
-      <div className="mapsearch">
-        {search && <MapSearch currentPosition={position} panTo={panTo} />}
-      </div>
+      {hideMapSearch ? null : (
+        <div className="mapsearch">
+          {search && <MapSearch currentPosition={position} panTo={panTo} />}
+        </div>
+      )}
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={zoom ? zoom : 10}
@@ -161,9 +165,5 @@ function MapSearch(props) {
     </div>
   );
 }
-
-// Map.defaultProps = {
-//   places: false
-// };
 
 export default Map;
