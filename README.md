@@ -1,6 +1,6 @@
 # CoviSource - Real-time Resources for COVID-19
 
-
+[![Frontend CI/CD](https://github.com/EmperorYP7/CoviSource/actions/workflows/ci.yml/badge.svg)](https://github.com/EmperorYP7/CoviSource/actions/workflows/ci.yml)
 
 [![Software License](https://img.shields.io/github/license/EmperorYP7/CoviSource?style=for-the-badge&logo=appveyor)](./LICENSE)
 ![Stars](https://img.shields.io/github/stars/EmperorYP7/CoviSource?style=for-the-badge&logo=appveyor)

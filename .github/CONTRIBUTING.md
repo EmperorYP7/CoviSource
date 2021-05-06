@@ -44,7 +44,7 @@ The frontend is made using Create React App.
 ```bash
 git clone https://github.com/<YOURNAME>/CoviSource.git
 ```
-or through GitHub CLI (recommended):
+or through [GitHub CLI](https://cli.github.com/) (recommended):
 ```bash
 gh repo <YOURNAME>/CoviSource
 ```
@@ -62,7 +62,9 @@ yarn start
 ### Contributing to Backend
 
 The backend for this project is made using TypeScript, PostgreSQL,
-GraphQL, redis, Apollo and other libraries.
+GraphQL, Redis, Apollo and other libraries.
+
+We'd be giving instructions for Docker soon!
 
 1. Fork this repository
 
@@ -70,16 +72,16 @@ GraphQL, redis, Apollo and other libraries.
 ```bash
 git clone https://github.com/<YOURNAME>/CoviSource.git
 ```
-or through GitHub CLI (recommended):
+or through [GitHub CLI](https://cli.github.com/) (recommended):
 ```bash
 gh repo <YOURNAME>/CoviSource
 ```
 
 3. Make sure you're on `backend-dev` branch
 
-4. Create a Postgres Database named covisourcedb
+4. Create a Postgres Database named `covisourcetestdb` (Install postgres [on Windows through Chocolatey](https://community.chocolatey.org/packages/postgresql12/12.0) and on [Mac through Homebrew](https://formulae.brew.sh/formula/postgresql@9.5#default))
 ```bash
-createdb covisourcedb
+createdb covisourcetestdb
 ```
 
 5. Issue the following commands in the root directory of the project: 
@@ -102,5 +104,3 @@ In short, when you submit code changes, your submissions are understood to be un
 ## Report bugs using Github's [issues](https://github.com/EmperorYP7/CoviSource/issues)
 
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](); it's that easy!
-
-
