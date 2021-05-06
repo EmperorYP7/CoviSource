@@ -45,6 +45,7 @@ The frontend is made using Create React App.
 git clone https://github.com/<YOURNAME>/CoviSource.git
 ```
 or through [GitHub CLI](https://cli.github.com/) (recommended):
+
 ```bash
 gh repo <YOURNAME>/CoviSource
 ```
@@ -66,12 +67,14 @@ GraphQL, Redis, Apollo and other libraries.
 
 We'd be giving instructions for Docker soon!
 
+
 1. Fork this repository
 
 1. Clone it on your local machine through git:
 ```bash
 git clone https://github.com/<YOURNAME>/CoviSource.git
 ```
+
 or through [GitHub CLI](https://cli.github.com/) (recommended):
 ```bash
 gh repo <YOURNAME>/CoviSource

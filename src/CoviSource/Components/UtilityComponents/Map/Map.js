@@ -166,8 +166,4 @@ function MapSearch(props) {
   );
 }
 
-// Map.defaultProps = {
-//   places: false
-// };
-
 export default Map;
