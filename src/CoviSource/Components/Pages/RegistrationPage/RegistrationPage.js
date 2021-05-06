@@ -1,5 +1,4 @@
-import React, { useReducer } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useReducer, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -49,7 +48,7 @@ const formReducer = (state, event) => {
 };
 
 export default function RegistrationPage(props) {
-  const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
+  const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   const [formData, setFormData] = useReducer(formReducer, {});
   setTimeout(function () {
     setCardAnimation("");
