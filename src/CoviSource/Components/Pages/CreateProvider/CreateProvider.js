@@ -22,7 +22,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./CreateProvider.scss";
 
 import image from "assets/img/bg7.jpg";
-// import CreateContact from "./CreateContact";
+import CreateContact from "./CreateContact";
 // import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 
 const useStyles = makeStyles(styles);
@@ -36,8 +36,9 @@ const formReducer = (state, event) => {
 
 export default function CreateProvider(props) {
   const [formData, setFormData] = useReducer(formReducer, {});
-  // const [resourceData, setresourceData] = useReducer(formReducer, {});
+  const [resourceData, setresourceData] = useReducer(formReducer, {});
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
+  const [numberContact, setNumberContact] = useState(0);
 
   setTimeout(function () {
     setCardAnimation("");
@@ -92,8 +93,6 @@ export default function CreateProvider(props) {
                     <CustomInput
                       labelText="Name of institute/provider"
                       id="providerName"
-                      name="providerName"
-                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -104,13 +103,13 @@ export default function CreateProvider(props) {
                             <Hospital className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
+                        onChange: handleChange,
+                        name: "providerName",
                       }}
                     />
                     <CustomInput
                       labelText="Address of provider"
                       id="address"
-                      name="address"
-                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -121,13 +120,13 @@ export default function CreateProvider(props) {
                             <LocationCity className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
+                        onChange: handleChange,
+                        name: "address",
                       }}
                     />
                     <CustomInput
                       labelText="Location: Latitude"
                       id="latitude"
-                      name="latitude"
-                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -139,13 +138,14 @@ export default function CreateProvider(props) {
                           </InputAdornment>
                         ),
                         autoComplete: "off",
+                        onChange: handleChange,
+                        name: "latitude",
                       }}
                     />
                     <CustomInput
                       labelText="Location: Longitude"
                       id="longitude"
                       name="longitude"
-                      onChange={handleChange}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -157,18 +157,27 @@ export default function CreateProvider(props) {
                           </InputAdornment>
                         ),
                         autoComplete: "off",
+                        onChange: handleChange,
+                        name: "longitude",
                       }}
                     />
                   </CardBody>
                   <Button className="add-resource-button">
                     + Add Resources
                   </Button>
-                  <Button className="add-contact-button">+ Add Contacts</Button>
-                  {/* <CreateContact
+                  <Button
+                    className="add-contact-button"
+                    onClick={() => setNumberContact(numberContact + 1)}
+                  >
+                    + Add Contacts
+                  </Button>
+                  {/* {
+                  } */}
+                  <CreateContact
                     classes={classes}
                     resourceData={resourceData}
                     setresourceData={setresourceData}
-                  /> */}
+                  />
                   <CardFooter className={classes.cardFooter}>
                     <Button
                       simple

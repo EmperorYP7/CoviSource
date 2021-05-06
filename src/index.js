@@ -11,18 +11,27 @@ import OrganisationPage from "CoviSource/Components/Pages/OrganisationPage/Organ
 import RegistrationPage from "CoviSource/Components/Pages/RegistrationPage/RegistrationPage";
 import Login from "CoviSource/Components/Pages/LoginPage/Login";
 import CreateProvider from "CoviSource/Components/Pages/CreateProvider/CreateProvider";
+import { ApolloProvider } from "@apollo/client/react";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_SERVER_URL,
+  cache: new InMemoryCache(),
+});
 
 var hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/register" component={RegistrationPage} />
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/new" component={CreateProvider} />
-      <Route exact path="/" component={LandingPage} />
-      <Route exact path="/:orgName" component={OrganisationPage} />
-    </Switch>
-  </Router>,
+  <ApolloProvider client={client}>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/register" component={RegistrationPage} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/new" component={CreateProvider} />
+        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/:orgName" component={OrganisationPage} />
+      </Switch>
+    </Router>
+  </ApolloProvider>,
   document.getElementById("root")
 );

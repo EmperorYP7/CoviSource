@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useReducer } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
-// import Hospital from "@material-ui/icons/LocalHospital";
 import Password from "@material-ui/icons/Lock";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -22,25 +21,75 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./Login.scss";
 
 import image from "assets/img/bg7.jpg";
-// import Map from "CoviSource/Components/UtilityComponents/Map/Map";
+
+import { gql, useMutation } from "@apollo/client";
 
 const useStyles = makeStyles(styles);
 
-// const center = {
-//   lat: 19.075983,
-//   lng: 72.877655,
-//   +919167260712
-//   Yash Pandey
-// };
+const LOGIN = gql`
+  mutation Login($input: UsernamePasswordInput!) {
+    login(input: $input) {
+      errors {
+        field
+        message
+      }
+      user {
+        _id
+        createdAt
+        updatedAt
+        email
+        name
+        contactNumber
+      }
+    }
+  }
+`;
+
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
 
 export default function Login(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-  // const [position, setPosition] = useState(center);
+  const [formData, setFormData] = useReducer(formReducer, {});
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
+
+  const [login, { data, loading }] = useMutation(LOGIN);
+
+  const handleChange = (event) => {
+    setFormData({
+      name: event.target.name,
+      value: event.target.value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await login({
+      variables: {
+        input: {
+          email: formData.email,
+          password: formData.password,
+        },
+      },
+    });
+    if (!loading && data !== undefined) {
+      alert("Login Sucessfull!");
+      alert(`Your details: \n
+        ID: ${data.login.user._id}\n
+        Name: ${data.login.user.name}\n
+        Contact Number: ${data.login.user.contactNumber}\n
+      `);
+      console.log(data.login.user);
+    }
+  };
 
   const scrollChangeData = {
     height: 5,
@@ -67,7 +116,7 @@ export default function Login(props) {
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={4}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+                <form onSubmit={handleSubmit} className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Login</h4>
                     <div className={classes.socialLine}>
@@ -97,6 +146,8 @@ export default function Login(props) {
                             <Email className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
+                        onChange: handleChange,
+                        name: "email",
                       }}
                     />
                     <CustomInput
@@ -113,11 +164,13 @@ export default function Login(props) {
                           </InputAdornment>
                         ),
                         autoComplete: "off",
+                        onChange: handleChange,
+                        name: "password",
                       }}
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
+                    <Button type="submit" simple color="primary" size="lg">
                       Lets Save Lives!
                     </Button>
                   </CardFooter>

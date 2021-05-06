@@ -15,7 +15,7 @@ import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import styles from "./Map.style";
 
 const config = {
-  googleMapsApiKey: "AIzaSyCxttBHhvoDHLXbUgnMtjO3OVDw46iFSQw",
+  googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   libraries: ["places"],
 };
 

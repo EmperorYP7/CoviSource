@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -23,21 +23,68 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./RegistrationPage.scss";
 
 import image from "assets/img/bg2.jpg";
+import Phone from "@material-ui/icons/Phone";
+
+import { gql, useMutation } from "@apollo/client";
 
 const useStyles = makeStyles(styles);
 
+const ADD_USER = gql`
+  mutation AddUser($input: UserRegisterInput!) {
+    register(input: $input) {
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
+
 export default function RegistrationPage(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-  // const [position, setPosition] = useState(center);
+  const [formData, setFormData] = useReducer(formReducer, {});
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
 
+  const [addUser, { data, loading }] = useMutation(ADD_USER);
+
   const scrollChangeData = {
     height: 5,
     color: "white",
+  };
+
+  const handleChange = (event) => {
+    setFormData({
+      name: event.target.name,
+      value: event.target.value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addUser({
+      variables: {
+        input: {
+          name: formData.name,
+          email: formData.email,
+          contactNumber: formData.contactNumber,
+          password: formData.password,
+        },
+      },
+    });
+    if (!loading && !data) {
+      alert("Registration successfull!");
+    }
   };
 
   return (
@@ -60,7 +107,7 @@ export default function RegistrationPage(props) {
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={4}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+                <form className={classes.form} onSubmit={handleSubmit}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Register Yourself</h4>
                     <div className={classes.socialLine}>
@@ -78,7 +125,7 @@ export default function RegistrationPage(props) {
                   <p className={classes.divider}>Or Be Classical</p>
                   <CardBody>
                     <CustomInput
-                      labelText="First Name..."
+                      labelText="Your Name.."
                       id="name"
                       formControlProps={{
                         fullWidth: true,
@@ -90,10 +137,12 @@ export default function RegistrationPage(props) {
                             <People className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
+                        name: "name",
+                        onChange: handleChange,
                       }}
                     />
                     <CustomInput
-                      labelText="Email..."
+                      labelText="Email ID.."
                       id="email"
                       formControlProps={{
                         fullWidth: true,
@@ -105,6 +154,8 @@ export default function RegistrationPage(props) {
                             <Email className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
+                        name: "email",
+                        onChange: handleChange,
                       }}
                     />
                     <CustomInput
@@ -121,27 +172,31 @@ export default function RegistrationPage(props) {
                           </InputAdornment>
                         ),
                         autoComplete: "off",
+                        name: "password",
+                        onChange: handleChange,
                       }}
                     />
                     <CustomInput
                       labelText="Contact Number"
-                      id="contactNo"
+                      id="contactNumber"
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
-                        type: "password",
+                        type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Password className={classes.inputIconsColor} />
+                            <Phone className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
                         autoComplete: "off",
+                        name: "contactNumber",
+                        onChange: handleChange,
                       }}
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
+                    <Button type="submit" simple color="primary" size="lg">
                       Get started
                     </Button>
                   </CardFooter>
