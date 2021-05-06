@@ -60,6 +60,11 @@ export class UserResolver {
         return User.findOne({ where: { _id: req.session.userID } });
     }
 
+    @Query(() => [User])
+    allUsers(): Promise<User[]> {
+        return User.find();
+    }
+
     @Mutation(() => UserResponse)
     async register(
         @Arg('input') input: UserRegisterInput,
@@ -114,15 +119,12 @@ export class UserResolver {
                         .execute();
             user = result.raw;
         } catch (err) {
-            if (err.code === '23505') {
-                return {
-                    errors: [
-                        {
-                            field: "email",
-                            message: "This email is already registered!"
-                        }
-                    ]
+            return {
+                errors: [{
+                    field: "THAT error :/",
+                    message: err,
                 }
+                ]
             }
         }
 

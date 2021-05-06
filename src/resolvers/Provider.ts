@@ -39,7 +39,7 @@ class NewProviderInput {
 @Resolver()
 export class ProviderResolver {
     @Query(() => [Provider])
-    providers(): Promise<Provider[]> {
+    allProviders(): Promise<Provider[]> {
         return Provider.find();
     }
 
@@ -48,6 +48,13 @@ export class ProviderResolver {
         @Arg('id', () => Int) id: number,
     ): Promise<Provider | undefined> {
         return Provider.findOne(id);
+    }
+
+    @Query(() => Provider, { nullable: true })
+    findProviderbySlug(
+        @Arg('slug', () => String) slug: string,
+    ): Promise<Provider | undefined> {
+        return Provider.findOne({slug: slug});
     }
 
     @Mutation(() => Provider)
@@ -85,7 +92,7 @@ export class ProviderResolver {
             return null;
         }
         if (typeof providerName !== 'undefined') {
-            await Provider.update(id, { providerName: providerName, slug: slugify(providerName) });
+            await Provider.update(id, { providerName: providerName, slug: slugify(providerName, { lower: true }) });
         }
         return provider;
     }
@@ -101,4 +108,4 @@ export class ProviderResolver {
         }
         return true;
     }
-} 
+}

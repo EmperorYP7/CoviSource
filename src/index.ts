@@ -19,9 +19,6 @@ const main = async () => {
 
     const app = express();
 
-    // Provider.delete({});
-    // User.delete({});
-
     const RedisStore = connectRedis(session);
     const redis = new Redis();
 
