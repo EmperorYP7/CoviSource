@@ -23,7 +23,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-      run: cd client
 
     - name: Cache dependencies
       uses: actions/cache@v2
@@ -33,7 +32,7 @@ jobs:
         key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install dependencies
-      run: yarn install
+      run: cd client && yarn install
 
     - name: Run the tests and generate coverage report
       run: yarn test -- --coverage --passWithNoTests
