@@ -23,13 +23,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+      run: cd client
 
     - name: Cache dependencies
       uses: actions/cache@v2
       with:
         path: |
           **/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install dependencies
       run: yarn install
