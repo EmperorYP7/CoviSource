@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Provider } from "./Provider";
 
 @ObjectType()
 @Entity()
-export class Resource {
+export class Resource extends BaseEntity {
     @Field(() => String)
     @Column()
     name: string;

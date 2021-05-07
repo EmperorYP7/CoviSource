@@ -13,15 +13,6 @@ class LocationTemplate {
 }
 
 @InputType()
-class ContactTemplate {
-    @Field()
-    name: string;
-
-    @Field()
-    number: string;
-}
-
-@InputType()
 class NewProviderInput {
     @Field()
     providerName: string;
@@ -31,9 +22,6 @@ class NewProviderInput {
 
     @Field(() => LocationTemplate)
     location: LocationTemplate;
-
-    @Field(() => [ContactTemplate])
-    contacts: [ContactTemplate];
 }
 
 @Resolver()
@@ -54,7 +42,7 @@ export class ProviderResolver {
     findProviderbySlug(
         @Arg('slug', () => String) slug: string,
     ): Promise<Provider | undefined> {
-        return Provider.findOne({slug: slug});
+        return Provider.findOne({ where: { slug: slug } });
     }
 
     @Mutation(() => Provider)
@@ -92,7 +80,12 @@ export class ProviderResolver {
             return null;
         }
         if (typeof providerName !== 'undefined') {
-            await Provider.update(id, { providerName: providerName, slug: slugify(providerName, { lower: true }) });
+            await Provider.update(id, {
+                providerName: providerName,
+                slug: slugify(providerName,
+                    { lower: true }
+                )
+            });
         }
         return provider;
     }

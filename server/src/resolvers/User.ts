@@ -106,18 +106,19 @@ export class UserResolver {
         let user;
         try {
             const result = await getConnection()
-                        .createQueryBuilder()
-                        .insert()
-                        .into(User)
-                        .values([{
-                            email: input.email,
-                            password: hasedPassword,
-                            name: input.name,
-                            contactNumber: input.contactNumber,
-                            providerID: req.session.providerID || undefined,
-                        }])
-                        .execute();
-            user = result.raw;
+                .createQueryBuilder()
+                .insert()
+                .into(User)
+                .values([{
+                    email: input.email,
+                    password: hasedPassword,
+                    name: input.name,
+                    contactNumber: input.contactNumber,
+                    providerID: req.session.providerID || undefined,
+                }])
+                .returning('*')
+                .execute();
+            user = result.raw[0];
         } catch (err) {
             return {
                 errors: [{
@@ -182,7 +183,7 @@ export class UserResolver {
                     resolve(false);
                     return;
                 }
-                res.clearCookie(COOKIE_NAME as string);
+                res.clearCookie(COOKIE_NAME);
                 resolve(true);
             })
         )
