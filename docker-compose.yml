@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+
+  api:
+    build: ./server
+    image: covisourceapi
+    container_name: covisource-api
+    volumes:
+      - ./server:/api
+    ports:
+      - 4000:4000
+    links:
+      - database
+      - redis
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/covisourcetestdb
+      CORS_ORIGIN: http://localhost:3000
+      SESSION_SECRET: somerandomsecret
+      PORT: 4000
+
+  react:
+    build: ./client
+    image: covisourceclient
+    container_name: covisource-client
+    volumes:
+      - ./client:/client
+    ports:
+      - 3000:3000
+    environment:
+      mode: dev
+      REACT_APP_GOOGLE_MAPS_API_KEY: AIzaSyCxttBHhvoDHLXbUgnMtjO3OVDw46iFSQw
+      REACT_APP_SERVER_URL: http://localhost:4000/graphql
+
+  redis:
+    image: redis
+    container_name: covisource-redis
+    command:
+      redis-server
+    ports:
+      - 6379:6379
+
+  database:
+    container_name: covisource-database
+    image: postgres
+    env_file:
+      - database.env
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+volumes:
+  database-data:

@@ -2,9 +2,9 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: [ frontend-dev ]
+    branches: [ dev, main, frontend-dev ]
   pull_request:
-    branches: [ frontend-dev ]
+    branches: [ dev, main ]
 
 jobs:
   build:
@@ -29,16 +29,16 @@ jobs:
       with:
         path: |
           **/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install dependencies
-      run: yarn install
+      run: cd client && yarn install
 
     - name: Run the tests and generate coverage report
-      run: yarn test -- --coverage --passWithNoTests
+      run: cd client && yarn test -- --coverage --passWithNoTests
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
 
     - name: Build
-      run: yarn run build
+      run: cd client && yarn run build
