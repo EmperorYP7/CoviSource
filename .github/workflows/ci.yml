@@ -2,9 +2,9 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: [ frontend-dev ]
+    branches: [ dev, main ]
   pull_request:
-    branches: [ frontend-dev ]
+    branches: [ dev, main ]
 
 jobs:
   build:
@@ -35,10 +35,10 @@ jobs:
       run: cd client && yarn install
 
     - name: Run the tests and generate coverage report
-      run: yarn test -- --coverage --passWithNoTests
+      run: cd client && yarn test -- --coverage --passWithNoTests
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
 
     - name: Build
-      run: yarn run build
+      run: cd client && yarn run build
