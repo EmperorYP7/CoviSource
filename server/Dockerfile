@@ -9,7 +9,6 @@ COPY yarn.lock /server
 RUN yarn
 
 COPY . .
-COPY .env.dev .env
 
 RUN yarn build
 

@@ -8,7 +8,6 @@ COPY yarn.lock /client
 RUN yarn
 
 COPY . .
-COPY .env.development.local .env
 
 ENV NODE_ENV development
 

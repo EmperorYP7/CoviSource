@@ -20,7 +20,10 @@ const main = async () => {
     const app = express();
 
     const RedisStore = connectRedis(session);
-    const redis = new Redis();
+    const redis = new Redis({
+        port: process.env.REDIS_PORT as unknown as number,
+        host: process.env.REDIS_HOST,
+    });
 
     app.use(
         cors({
