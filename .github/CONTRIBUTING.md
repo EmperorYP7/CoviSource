@@ -139,13 +139,21 @@ gh repo <YOURNAME>/CoviSource
 cd CoviSource
 ```
 
+4. Go to client and install dependencies
+```bash
+cd client
+yarn
+```
+
 3. For Linux and macOS (Darwin), issue the command:
 ```bash
+cd ..
 make
 ```
 
 For Windows, issue the command:
-```
+```bash
+cd ..
 docker-compose up
 ```
 
