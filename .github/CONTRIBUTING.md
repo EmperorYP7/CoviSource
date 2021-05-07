@@ -105,18 +105,21 @@ git checkout example-feature
 createdb covisourcetestdb
 ```
 
-6. Issue the following commands in the root directory of the project: 
+6. Copy the contents of `/server/.env.dev` to `/server/.env` 
+(Make a new .env file. Do NOT delete `.env.dev`)
+
+7. Issue the following commands in the root directory of the project: 
 ```bash
 yarn install
 yarn watch
 ```
 
-7. Let `yarn watch` run in background. Open a new terminal and issue:
+8. Let `yarn watch` run in background. Open a new terminal and issue:
 ```bash
 yarn dev
 ```
 
-8. Make changes and push it to your fork, and create a PR on `dev` branch of this repo.
+9. Make changes and push it to your fork, and create a PR on `dev` branch of this repo.
 
 <div id="Docker-pointer"></div>
 
