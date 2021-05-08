@@ -116,4 +116,25 @@ export class ResourceResolver {
             return { resource };
         }
     }
+
+    @Mutation(() => Boolean)
+    async deleteResource(
+        @Arg('id') id: number,
+    ): Promise<boolean | undefined> {
+        return new Promise(async (resolve) => {
+            const resource = await Resource.findOne(id);
+            if (!resource) {
+                console.log("Resource not found!");
+                resolve(false);
+            } else {
+                try {
+                    await Resource.delete(id);
+                } catch (err) {
+                    console.log(err);
+                    resolve(false);
+                }
+                resolve(true);
+            }
+        })
+    }
 }

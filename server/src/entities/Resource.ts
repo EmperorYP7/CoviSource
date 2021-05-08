@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Provider } from "./Provider";
 
 @ObjectType()
@@ -20,6 +20,10 @@ export class Resource extends BaseEntity {
     @ManyToOne(() => Provider, provider => provider.resources)
     @JoinColumn()
     provider: Provider;
+
+    @Field(() => Int)
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Field(() => String)
     @CreateDateColumn()

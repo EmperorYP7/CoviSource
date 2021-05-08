@@ -148,8 +148,16 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async login(
         @Arg('input') input: UsernamePasswordInput,
-        @Ctx() {req} : MyContext
-    ) : Promise<UserResponse> {
+        @Ctx() { req } : MyContext
+    ): Promise<UserResponse> {
+        if (req.session.userID !== undefined) {
+            return {
+                errors: [{
+                    field: "email",
+                    message: "You're already logged in!",
+                }]
+            }
+        }
         const user = await User.findOne({where: { email: input.email }});
         if (!user) {
             return {
