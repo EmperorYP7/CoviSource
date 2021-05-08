@@ -25,20 +25,10 @@ import "./RegistrationPage.scss";
 import image from "assets/img/bg2.jpg";
 import Phone from "@material-ui/icons/Phone";
 
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "CoviSource/graphql/mutations/AddUser";
 
 const useStyles = makeStyles(styles);
-
-const ADD_USER = gql`
-  mutation AddUser($input: UserRegisterInput!) {
-    register(input: $input) {
-      errors {
-        field
-        message
-      }
-    }
-  }
-`;
 
 const formReducer = (state, event) => {
   return {
@@ -77,7 +67,7 @@ export default function RegistrationPage(props) {
         input: {
           name: formData.name,
           email: formData.email,
-          contactNumber: formData.contactNumber,
+          phoneNumber: formData.phoneNumber,
           password: formData.password,
         },
       },
@@ -178,7 +168,7 @@ export default function RegistrationPage(props) {
                     />
                     <CustomInput
                       labelText="Contact Number"
-                      id="contactNumber"
+                      id="phoneNumber"
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -190,7 +180,7 @@ export default function RegistrationPage(props) {
                           </InputAdornment>
                         ),
                         autoComplete: "off",
-                        name: "contactNumber",
+                        name: "phoneNumber",
                         onChange: handleChange,
                       }}
                     />

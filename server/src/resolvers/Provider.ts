@@ -52,17 +52,15 @@ export class ProviderResolver {
     async createProvider(
         @Arg('input') input: NewProviderInput,
         @Ctx() { req }: MyContext
-        // @UseMiddleware(onAuth)
     ): Promise<Provider | undefined> {
-        if (typeof req.session.providerID !== 'undefined') {
+        if (req.session.providerID) {
             throw Error("Provider already created!");
         }
         var provider;
         try {
             provider = await Provider.create({
                 ...input,
-                location: input.location,
-                slug: slugify(input.providerName),
+                slug: slugify(input.providerName, { lower: true }),
                 ownerID: req.session.userID,
                 resources: [],
             }).save();
@@ -76,22 +74,24 @@ export class ProviderResolver {
     @Mutation(() => Provider, { nullable: true })
     @UseMiddleware(isAuth, isRegistered)
     async updateProvider(
-        @Arg('providerName', () => String) providerName: string,
+        @Arg('input') input: NewProviderInput,
         @Ctx() { req }: MyContext
     ): Promise<Provider | null> {
         const provider = await Provider.findOne(req.session.providerID);
         if (!provider) {
             return null;
         }
-        if (typeof providerName !== 'undefined') {
+        if (provider) {
             await Provider.update(req.session.providerID as number, {
-                providerName: providerName,
-                slug: slugify(providerName,
-                    { lower: true }
-                )
+                ...input,
+                slug: slugify(input.providerName, { lower: true }),
             });
         }
-        return provider;
+        const updatedProvider = await Provider.findOne(req.session.providerID);
+        if (updatedProvider) {
+            return updatedProvider;
+        }
+        return null;
     }
 
     @Mutation(() => Boolean, { nullable: true })

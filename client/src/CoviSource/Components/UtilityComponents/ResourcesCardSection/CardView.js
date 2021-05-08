@@ -188,7 +188,7 @@ export default function CardView(props) {
                                   </div>
                                   <div className="updateInfo">
                                     <p>
-                                      <span>{details.contactNumber}</span>
+                                      <span>{details.phoneNumber}</span>
                                     </p>
                                   </div>
                                 </div>

@@ -15,7 +15,7 @@ export class User extends BaseEntity {
 
     @Field(() => String)
     @Column({ nullable: true, unique: true })
-    contactNumber!: string;
+    phoneNumber!: string;
 
     @Field(() => String)
     @Column({})

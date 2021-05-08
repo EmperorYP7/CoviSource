@@ -53,7 +53,7 @@ export class ContactResolver {
     }
 
     @Mutation(() => ContactResponse)
-    @UseMiddleware(isAuth)
+    @UseMiddleware(isAuth, isRegistered)
     async createContact(
         @Arg('input') input: ContactInput,
         @Ctx() { req }: MyContext
@@ -71,6 +71,20 @@ export class ContactResolver {
                 errors: [{
                     field: "phoneNumber",
                     message: "phoneNumber should be at least 10 digits long"
+                }]
+            }
+        }
+        const result = await Contact.findOne({
+            where: {
+                providerID: req.session.providerID,
+                name: input.name,
+            }
+        });
+        if (result) {
+            return {
+                errors: [{
+                    field: "contact",
+                    message: "This contact already exists"
                 }]
             }
         }

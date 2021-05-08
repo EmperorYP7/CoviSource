@@ -5,6 +5,7 @@ import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 import { getConnection } from 'typeorm';
 import { isAuth } from '../middleware/isAuth';
+import { Provider } from '../entities/Provider';
 
 @InputType()
 class UsernamePasswordInput {
@@ -24,7 +25,7 @@ class UserRegisterInput {
     password: string
 
     @Field()
-    contactNumber: string
+    phoneNumber: string
 
     @Field()
     name: string
@@ -72,6 +73,14 @@ export class UserResolver {
         @Arg('input') input: UserRegisterInput,
         @Ctx() { req }: MyContext
     ): Promise<UserResponse> {
+        if (req.session.userID) {
+            return {
+                errors: [{
+                    field: "user",
+                    message: "Already logged in"
+                }]
+            }
+        }
         if (input.email.length <= 4 || !input.email.includes('@')) {
             return {
                 errors: [{
@@ -88,10 +97,10 @@ export class UserResolver {
                 }]
             }
         }
-        if (input.contactNumber.length < 10) {
+        if (input.phoneNumber.length < 10 || input.phoneNumber.length > 13) {
             return {
                 errors: [{
-                    field: "contactNumber",
+                    field: "phoneNumber",
                     message: "Contact number is invalid. Enter 10 Digit number"
                 }]
             }
@@ -115,7 +124,7 @@ export class UserResolver {
                     email: input.email,
                     password: hasedPassword,
                     name: input.name,
-                    contactNumber: input.contactNumber,
+                    phoneNumber: input.phoneNumber,
                     providerID: req.session.providerID || undefined,
                 }])
                 .returning('*')
@@ -178,7 +187,11 @@ export class UserResolver {
                 }]
             }
         }
+        const provider = await Provider.findOne({ where: { ownerID: user._id } });
         req.session.userID = user._id;
+        if (provider) {
+            req.session.providerID = provider._id;
+        }
         return { user };
     }
 

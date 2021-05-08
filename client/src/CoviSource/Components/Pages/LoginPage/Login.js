@@ -22,28 +22,10 @@ import "./Login.scss";
 
 import image from "assets/img/bg7.jpg";
 
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "CoviSource/graphql/mutations/Login";
 
 const useStyles = makeStyles(styles);
-
-const LOGIN = gql`
-  mutation Login($input: UsernamePasswordInput!) {
-    login(input: $input) {
-      errors {
-        field
-        message
-      }
-      user {
-        _id
-        createdAt
-        updatedAt
-        email
-        name
-        contactNumber
-      }
-    }
-  }
-`;
 
 const formReducer = (state, event) => {
   return {
@@ -85,7 +67,7 @@ export default function Login(props) {
       alert(`Your details: \n
         ID: ${data.login.user._id}\n
         Name: ${data.login.user.name}\n
-        Contact Number: ${data.login.user.contactNumber}\n
+        Contact Number: ${data.login.user.phoneNumber}\n
       `);
       console.log(data.login.user);
     }
