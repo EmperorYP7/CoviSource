@@ -1,4 +1,4 @@
-FROM node:16
+FROM mhart/alpine-node:16
 
 WORKDIR /client
 
@@ -13,4 +13,3 @@ ENV NODE_ENV development
 
 EXPOSE 3000
 CMD [ "yarn", "start" ]
-USER node

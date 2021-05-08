@@ -1,4 +1,4 @@
-FROM node:16
+FROM mhart/alpine-node:16
 
 # Create app directory
 WORKDIR /server
@@ -16,4 +16,3 @@ ENV NODE_ENV development
 
 EXPOSE 4000
 CMD [ "yarn", "dev" ]
-USER node
