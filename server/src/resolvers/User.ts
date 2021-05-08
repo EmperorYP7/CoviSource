@@ -1,9 +1,10 @@
 import { User } from '../entities/User';
 import { MyContext } from '../types';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 import { getConnection } from 'typeorm';
+import { isAuth } from '../middleware/isAuth';
 
 @InputType()
 class UsernamePasswordInput {
@@ -52,6 +53,7 @@ class UserResponse {
 export class UserResolver {
 
     @Query(() => User, { nullable: true })
+    @UseMiddleware(isAuth)
     async me(@Ctx() { req } : MyContext): Promise<User | undefined | null> {
         // Not logged in
         if (!req.session.userID) {
@@ -181,6 +183,7 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     logout(
         @Ctx() {req, res}: MyContext
     ) {

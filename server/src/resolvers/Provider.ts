@@ -1,7 +1,9 @@
 import { Provider } from '../entities/Provider';
-import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
 import slugify from 'slugify';
 import { MyContext } from 'src/types';
+import { isAuth } from '../middleware/isAuth';
+import { isRegistered } from '../middleware/isRegistered';
 
 @InputType()
 class LocationTemplate {
@@ -46,6 +48,7 @@ export class ProviderResolver {
     }
 
     @Mutation(() => Provider)
+    @UseMiddleware(isAuth)
     async createProvider(
         @Arg('input') input: NewProviderInput,
         @Ctx() { req }: MyContext
@@ -70,17 +73,18 @@ export class ProviderResolver {
         return provider;
     }
 
-    @Mutation(() => Provider, {nullable: true})
+    @Mutation(() => Provider, { nullable: true })
+    @UseMiddleware(isAuth, isRegistered)
     async updateProvider(
-        @Arg('id', () => Int) id: number,
         @Arg('providerName', () => String) providerName: string,
+        @Ctx() { req }: MyContext
     ): Promise<Provider | null> {
-        const provider = await Provider.findOne(id);
+        const provider = await Provider.findOne(req.session.providerID);
         if (!provider) {
             return null;
         }
         if (typeof providerName !== 'undefined') {
-            await Provider.update(id, {
+            await Provider.update(req.session.providerID as number, {
                 providerName: providerName,
                 slug: slugify(providerName,
                     { lower: true }
@@ -90,7 +94,8 @@ export class ProviderResolver {
         return provider;
     }
 
-    @Mutation(() => Boolean, {nullable: true})
+    @Mutation(() => Boolean, { nullable: true })
+    @UseMiddleware(isAuth, isRegistered)
     async deleteProvider(
         @Arg('id', () => Int) id: number,
     ): Promise<boolean> {

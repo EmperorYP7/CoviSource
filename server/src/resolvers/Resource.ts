@@ -1,6 +1,8 @@
 import { Resource } from '../entities/Resource';
 import { MyContext } from '../types';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
+import { isAuth } from '../middleware/isAuth';
+import { isRegistered } from '../middleware/isRegistered';
 
 @InputType()
 class ResourceInput {
@@ -51,6 +53,7 @@ export class ResourceResolver {
     }
 
     @Mutation(() => ResourceResponse)
+    @UseMiddleware(isAuth)
     async createResource(
         @Arg('input') input: ResourceInput,
         @Ctx() { req }: MyContext
@@ -71,6 +74,20 @@ export class ResourceResolver {
                 }]
             }
         }
+        const result = await Resource.findOne({
+            where: {
+                providerID: req.session.providerID,
+                name: input.name,
+            }
+        });
+        if (result) {
+            return {
+                errors: [{
+                    field: "resource",
+                    message: "This resource already exists"
+                }]
+            }
+        }
         const resource = await Resource.create({
             ...input,
             providerID: req.session.providerID,
@@ -80,6 +97,7 @@ export class ResourceResolver {
     }
 
     @Mutation(() => ResourceResponse)
+    @UseMiddleware(isAuth, isRegistered)
     async updateResource(
         @Arg('input') input: ResourceUpdateInput,
     ): Promise<ResourceResponse | undefined> {
@@ -118,17 +136,19 @@ export class ResourceResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth, isRegistered)
     async deleteResource(
         @Arg('id') id: number,
+        @Ctx() { req }: MyContext
     ): Promise<boolean | undefined> {
         return new Promise(async (resolve) => {
-            const resource = await Resource.findOne(id);
+            const resource = await Resource.findOne({ id: id, providerID: req.session.providerID });
             if (!resource) {
                 console.log("Resource not found!");
                 resolve(false);
             } else {
                 try {
-                    await Resource.delete(id);
+                    await Resource.delete({ id: id, providerID: req.session.providerID });
                 } catch (err) {
                     console.log(err);
                     resolve(false);

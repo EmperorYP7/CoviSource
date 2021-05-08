@@ -1,13 +1,13 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Provider } from "./Provider";
 
 @ObjectType()
 @Entity()
-export class Contact {
+export class Contact extends BaseEntity {
     @Field(() => Int)
     @PrimaryGeneratedColumn()
-    _id: number;
+    id: number;
 
     @Field(() => Int)
     @PrimaryColumn()
