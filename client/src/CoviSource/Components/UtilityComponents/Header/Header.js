@@ -5,17 +5,9 @@ import propTypes from "prop-types";
 import UI_HEADER from "components/Header/Header.js";
 import { logoURL } from "CoviSource/UtilityFunctions";
 import "./Header.scss";
-import { gql, useQuery } from "@apollo/client";
-
-const ME = gql`
-  query Me {
-    me {
-      _id
-      email
-      name
-    }
-  }
-`;
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
+import { LOGOUT } from "CoviSource/graphql/mutations/User/Logout";
 
 Header.propTypes = {
   theme: propTypes.string,
@@ -23,11 +15,14 @@ Header.propTypes = {
 
 export default function Header(props) {
   const { ...rest } = props;
-  const { data, loading } = useQuery(ME);
+  const { data, loading } = useQuery(GET_USER);
+  const [logout] = useMutation(LOGOUT);
+  const handleLogout = () => {
+    logout();
+    window.location.assign("/");
+  };
   let body = null;
-  if (loading) {
-    body = null;
-  } else if (data.me === null) {
+  if (!loading && !data) {
     body = (
       <>
         <NavLink className="nav-link" to="/login">
@@ -47,7 +42,7 @@ export default function Header(props) {
         <NavLink className="nav-link" to="/new">
           Register Provider
         </NavLink>
-        <NavLink className="nav-link" to="/new">
+        <NavLink className="nav-link" onClick={handleLogout} to="/">
           Logout
         </NavLink>
       </>
