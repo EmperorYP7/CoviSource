@@ -131,23 +131,15 @@ export class UserResolver {
                 .execute();
             user = result.raw[0];
         } catch (err) {
-            return {
-                errors: [{
-                    field: "THAT error :/",
-                    message: err,
-                }
-                ]
-            }
-        }
-
-        if (typeof user === 'undefined') {
-            return {
-                errors: [
-                    {
-                        field: "password",
-                        message: "Not a valid password"
-                    }
-                ]
+            if (err.detail.includes("already exists")) {
+                return {
+                    errors: [
+                        {
+                            field: "username",
+                            message: "This user already exists!"
+                        }
+                    ]
+                };
             }
         }
         // Store userID session

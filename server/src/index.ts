@@ -32,7 +32,7 @@ const main = async () => {
             origin: process.env.CORS_ORIGIN,
             credentials: true,
         })
-    )
+    );
 
     app.use(
         session({
@@ -61,7 +61,7 @@ const main = async () => {
         context: ({ req, res }) : MyContext => ({ req, res, redis })
     });
 
-    apolloServer.applyMiddleware({ app }); 
+    apolloServer.applyMiddleware({ app, cors: false }); 
 
     app.listen(parseInt(process.env.PORT), () => {
         console.log("connected to DB!");

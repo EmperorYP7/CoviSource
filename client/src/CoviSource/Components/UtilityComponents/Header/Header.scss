@@ -1,0 +1,10 @@
+.nav-link {
+    color: white;
+    :hover, :focus {
+        color: orange;
+    }
+    margin: 0 2em 0 2em;
+    @media (max-width: 960px) {
+        width: 100%;
+    }
+}

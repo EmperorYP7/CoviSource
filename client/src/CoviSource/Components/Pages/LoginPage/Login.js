@@ -21,6 +21,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./Login.scss";
 
 import image from "assets/img/bg7.jpg";
+import { useHistory } from "react-router-dom";
 
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "CoviSource/graphql/mutations/User/Login";
@@ -53,6 +54,7 @@ export default function Login(props) {
   };
 
   const handleSubmit = async (event) => {
+    const history = useHistory();
     event.preventDefault();
     await login({
       variables: {
@@ -70,6 +72,7 @@ export default function Login(props) {
         Contact Number: ${data.login.user.phoneNumber}\n
       `);
       console.log(data.login.user);
+      history.push("/");
     }
   };
 
