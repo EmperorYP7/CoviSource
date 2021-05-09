@@ -9,11 +9,7 @@ export const LOGIN = gql`
       }
       user {
         _id
-        createdAt
-        updatedAt
-        email
         name
-        phoneNumber
       }
     }
   }

@@ -52,6 +52,14 @@ export class ResourceResolver {
         return Resource.find();
     }
 
+    @Query(() => [Resource])
+    async getResource(
+        @Arg('providerID') providerID: number,
+    ): Promise<Resource[]> {
+        const resources = await Resource.find({ where: { providerID } });
+        return resources;
+    }
+
     @Mutation(() => ResourceResponse)
     @UseMiddleware(isAuth)
     async createResource(

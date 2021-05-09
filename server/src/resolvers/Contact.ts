@@ -52,6 +52,14 @@ export class ContactResolver {
         return Contact.find();
     }
 
+    @Query(() => [Contact])
+    async getContact(
+        @Arg('providerID') providerID: number,
+    ): Promise<Contact[]>{
+        const contacts = await Contact.find({ where: { providerID } });
+        return contacts;
+    }
+
     @Mutation(() => ContactResponse)
     @UseMiddleware(isAuth, isRegistered)
     async createContact(

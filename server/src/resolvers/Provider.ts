@@ -34,10 +34,11 @@ export class ProviderResolver {
     }
 
     @Query(() => Provider, { nullable: true })
-    findProvider(
-        @Arg('id', () => Int) id: number,
+    @UseMiddleware(isAuth, isRegistered)
+    myProvider(
+        @Ctx() { req }: MyContext
     ): Promise<Provider | undefined> {
-        return Provider.findOne(id);
+        return Provider.findOne(req.session.providerID);
     }
 
     @Query(() => Provider, { nullable: true })
