@@ -26,7 +26,7 @@ import image from "assets/img/bg2.jpg";
 import Phone from "@material-ui/icons/Phone";
 
 import { useMutation } from "@apollo/client";
-import { ADD_USER } from "CoviSource/graphql/mutations/AddUser";
+import { ADD_USER } from "CoviSource/graphql/mutations/User/AddUser";
 
 const useStyles = makeStyles(styles);
 

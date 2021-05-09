@@ -23,7 +23,7 @@ import "./Login.scss";
 import image from "assets/img/bg7.jpg";
 
 import { useMutation } from "@apollo/client";
-import { LOGIN } from "CoviSource/graphql/mutations/Login";
+import { LOGIN } from "CoviSource/graphql/mutations/User/Login";
 
 const useStyles = makeStyles(styles);
 
