@@ -46,15 +46,15 @@ export default function OrganisationPage() {
     contacts: [
       {
         contactPersonName: "Dr. Gaurav Bhatt",
-        contactNumber: "9821095754",
+        phoneNumber: "9821095754",
       },
       {
         contactPersonName: "Dr. Ashok Bhoir",
-        contactNumber: "9821095754",
+        phoneNumber: "9821095754",
       },
       {
         contactPersonName: "Dr. Rupender Singh Sodhi",
-        contactNumber: "9821095754",
+        phoneNumber: "9821095754",
       },
     ],
     serviceName: "Service Provided",
@@ -148,7 +148,7 @@ export default function OrganisationPage() {
                         </div>
                         <div className="infoValue">
                           <h6>
-                            <strong>{item.contactNumber}</strong>
+                            <strong>{item.phoneNumber}</strong>
                             <br />
                           </h6>
                         </div>

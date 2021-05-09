@@ -54,7 +54,7 @@ export default function LandingPage(props) {
       ],
       address: "Provider Address",
       contactPersonName: "Contact Person's Name",
-      contactNumber: "9821095754",
+      phoneNumber: "9821095754",
       serviceName: "Service Provided",
     },
     {
@@ -80,7 +80,7 @@ export default function LandingPage(props) {
       ],
       address: "Free oxygen seva, near gurudwara, delhi",
       contactPersonName: "Jaspal Singh",
-      contactNumber: "9821095754",
+      phoneNumber: "9821095754",
       serviceName: "Oxygen refilling",
     },
     {
@@ -106,7 +106,7 @@ export default function LandingPage(props) {
       ],
       address: "Apex Hospital, Kalyan West, Mumbai",
       contactPersonName: "Dr. D P Goel",
-      contactNumber: "9789965234",
+      phoneNumber: "9789965234",
       serviceName: "Hospital",
     },
   ]);
@@ -139,7 +139,7 @@ export default function LandingPage(props) {
         ],
         address: "Provider Address",
         contactPersonName: "Contact Person's Name",
-        contactNumber: "9821095754",
+        phoneNumber: "9821095754",
         serviceName: "Service Provided",
       },
       {
@@ -165,7 +165,7 @@ export default function LandingPage(props) {
         ],
         address: "Free oxygen seva, near gurudwara, delhi",
         contactPersonName: "Jaspal Singh",
-        contactNumber: "9821095754",
+        phoneNumber: "9821095754",
         serviceName: "Oxygen refilling",
       },
       {
@@ -191,7 +191,7 @@ export default function LandingPage(props) {
         ],
         address: "Apex Hospital, Kalyan West, Mumbai",
         contactPersonName: "Dr. D P Goel",
-        contactNumber: "9789965234",
+        phoneNumber: "9789965234",
         serviceName: "Hospital",
       },
     ]);

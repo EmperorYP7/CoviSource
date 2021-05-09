@@ -13,6 +13,8 @@ import { MyContext } from './types';
 import { createConnection } from 'typeorm';
 import config from './typeorm.config';
 import cors from 'cors';
+import { ResourceResolver } from './resolvers/Resource';
+import { ContactResolver } from './resolvers/Contact';
 
 const main = async () => {
     await createConnection(config);
@@ -53,7 +55,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [ProviderResolver, UserResolver],
+            resolvers: [ProviderResolver, UserResolver, ResourceResolver, ContactResolver],
             validate: false
         }),
         context: ({ req, res }) : MyContext => ({ req, res, redis })

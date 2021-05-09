@@ -36,7 +36,7 @@ const formReducer = (state, event) => {
 
 export default function CreateProvider(props) {
   const [formData, setFormData] = useReducer(formReducer, {});
-  const [resourceData, setresourceData] = useReducer(formReducer, {});
+  const [resourceData, setresourceData] = useState([]);
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   const [numberContact, setNumberContact] = useState(0);
 
@@ -171,8 +171,6 @@ export default function CreateProvider(props) {
                   >
                     + Add Contacts
                   </Button>
-                  {/* {
-                  } */}
                   <CreateContact
                     classes={classes}
                     resourceData={resourceData}
