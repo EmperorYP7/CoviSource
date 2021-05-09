@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const FIND_PROVIDER = gql`
-  query FindProvider($slug: String!) {
-    findProviderbySlug(slug: $slug) {
+export const GET_ALL_PROVIDERS = gql`
+  query GetAllProviders {
+    allProviders {
       id
       providerName
       address
@@ -10,7 +10,7 @@ export const FIND_PROVIDER = gql`
         latitude
         longitude
       }
-      createdAt
+      slug
       updatedAt
     }
   }
