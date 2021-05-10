@@ -8,6 +8,7 @@ import "./Header.scss";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
 import { LOGOUT } from "CoviSource/graphql/mutations/User/Logout";
+import { MY_PROVIDER } from "CoviSource/graphql/queries/Provider/MyProvider";
 
 Header.propTypes = {
   theme: propTypes.string,
@@ -15,38 +16,41 @@ Header.propTypes = {
 
 export default function Header(props) {
   const { ...rest } = props;
-  const { data, loading } = useQuery(GET_USER);
+  const { data, loading, error } = useQuery(GET_USER);
   const [logout] = useMutation(LOGOUT);
   const handleLogout = () => {
     logout();
     window.location.assign("/");
   };
-  let body = null;
-  if (!loading && !data) {
-    body = (
-      <>
-        <NavLink className="nav-link" to="/login">
-          Login
-        </NavLink>
-        <NavLink className="nav-link" to="/register">
-          Register
-        </NavLink>
-      </>
-    );
-  } else {
-    body = (
-      <>
-        <NavLink className="nav-link" to="/slug">
-          My Provider
-        </NavLink>
-        <NavLink className="nav-link" to="/new">
-          Register Provider
-        </NavLink>
-        <NavLink className="nav-link" onClick={handleLogout} to="/">
-          Logout
-        </NavLink>
-      </>
-    );
+  let body;
+  if (loading) {
+    body = null;
+  }
+  if (error) {
+    body = <>Error!</>;
+  }
+  if (data) {
+    if (data.me === null) {
+      body = (
+        <>
+          <NavLink className="nav-link" to="/login">
+            Login
+          </NavLink>
+          <NavLink className="nav-link" to="/register">
+            Register
+          </NavLink>
+        </>
+      );
+    } else {
+      body = (
+        <>
+          <MyProviderButton />
+          <NavLink className="nav-link" onClick={handleLogout} to="/">
+            Logout
+          </NavLink>
+        </>
+      );
+    }
   }
   return (
     <UI_HEADER
@@ -63,3 +67,20 @@ export default function Header(props) {
     />
   );
 }
+const MyProviderButton = () => {
+  const { loading, data, error } = useQuery(MY_PROVIDER);
+  if (loading) return <></>;
+  if (error)
+    return (
+      <NavLink className="nav-link" to="/new">
+        Register Provider
+      </NavLink>
+    );
+  if (data) {
+    return (
+      <NavLink className="nav-link" to={`${data.myProvider.slug}`}>
+        My Provider
+      </NavLink>
+    );
+  }
+};

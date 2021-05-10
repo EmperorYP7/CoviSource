@@ -54,7 +54,6 @@ class UserResponse {
 export class UserResolver {
 
     @Query(() => User, { nullable: true })
-    @UseMiddleware(isAuth)
     async me(@Ctx() { req } : MyContext): Promise<User | undefined | null> {
         // Not logged in
         if (!req.session.userID) {
@@ -125,7 +124,7 @@ export class UserResolver {
                     password: hasedPassword,
                     name: input.name,
                     phoneNumber: input.phoneNumber,
-                    providerID: req.session.providerID || undefined,
+                    providerID: undefined,
                 }])
                 .returning('*')
                 .execute();
