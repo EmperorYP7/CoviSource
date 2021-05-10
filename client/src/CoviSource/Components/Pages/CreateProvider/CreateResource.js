@@ -5,7 +5,7 @@ import CustomInput from "components/CustomInput/CustomInput";
 import propTypes from "prop-types";
 import React from "react";
 
-export default function CreateContact({ classes, setresourceData }) {
+export default function CreateResource({ classes, setresourceData }) {
   const handleChange = (event) => {
     setresourceData({
       name: event.target.name,
@@ -13,7 +13,7 @@ export default function CreateContact({ classes, setresourceData }) {
     });
   };
   return (
-    <div className="contact">
+    <div className="resource">
       <CustomInput
         labelText="Name"
         id="name"
@@ -55,7 +55,7 @@ export default function CreateContact({ classes, setresourceData }) {
   );
 }
 
-CreateContact.propTypes = {
+CreateResource.propTypes = {
   classes: propTypes.object,
   formData: propTypes.object,
   setresourceData: propTypes.func,

@@ -1,13 +1,13 @@
 import React from "react";
+import { useQuery } from "@apollo/client";
+import { FIND_PROVIDER } from "CoviSource/graphql/queries/Provider/FindProvider";
 import { useParams } from "react-router-dom";
+import Contacts from "./Contacts";
 import { makeStyles } from "@material-ui/core";
-
 import styles from "assets/jss/material-kit-react/views/components.js";
-
 import "./OrganisationPage.scss";
-
+import Resources from "./Resources";
 import Header from "CoviSource/Components/UtilityComponents/Header/Header";
-// import { logoURL } from "CoviSource/UtilityFunctions";
 import { isMobile } from "CoviSource/UtilityFunctions";
 import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 const useStyles = makeStyles(styles);
@@ -20,51 +20,20 @@ const status = {
 
 export default function OrganisationPage() {
   const classes = useStyles();
-  const data = {
-    username: "someUsername",
-    resourceProviderName: "Fortis Hospital, Kalyan",
-    availability: "AVAILABLE",
-    resources: [
-      {
-        resource: "Oxygen refilling",
-        quantity: 32,
-        updated: "06:00 PM, 27 APRIL",
-      },
-      {
-        resource: "Hospital Beds",
-        quantity: 23,
-        updated: "06:00 PM, 27 APRIL",
-      },
-      {
-        resource: "Remdesivir Vials",
-        quantity: 65,
-        updated: "06:00 PM, 27 APRIL",
-      },
-    ],
-    address:
-      "Fortis Hospital,\n Near Kalyan Market,\n Kalyan West,\n Maharashtra, India - 421306",
-    contacts: [
-      {
-        contactPersonName: "Dr. Gaurav Bhatt",
-        phoneNumber: "9821095754",
-      },
-      {
-        contactPersonName: "Dr. Ashok Bhoir",
-        phoneNumber: "9821095754",
-      },
-      {
-        contactPersonName: "Dr. Rupender Singh Sodhi",
-        phoneNumber: "9821095754",
-      },
-    ],
-    serviceName: "Service Provided",
-    location: {
-      lat: 19.21832,
-      lng: 73.1273,
-    },
-  };
   const params = useParams();
-  console.log(params.orgName);
+  const { loading, data, error } = useQuery(FIND_PROVIDER, {
+    variables: {
+      slug: `${params.orgName}`,
+    },
+  });
+  if (loading) return <>Loading</>;
+  if (error) {
+    console.log(error);
+    return <>Error</>;
+  }
+  if (data) {
+    console.log(data);
+  }
 
   const getBannerClass = function () {
     return "banner banner" + status[data.availability];
@@ -75,6 +44,9 @@ export default function OrganisationPage() {
     color: "white",
   };
 
+  if (data.findProviderbySlug === null) {
+    return <>Provider Not found!</>;
+  }
   return (
     <>
       <Header
@@ -88,75 +60,14 @@ export default function OrganisationPage() {
           <div className="header">
             <div className={getBannerClass()}></div>
             <div className="headInfo">
-              <h6>{data.serviceName}</h6>
-              <h2>{data.resourceProviderName}</h2>
+              <h6>{data.findProviderbySlug.providerName}</h6>
+              <h2>{data.findProviderbySlug.providerName}</h2>
             </div>
           </div>
           <div className="info">
             <div className="infoContainer">
-              {/* Resources */}
-              <ul>
-                <li>
-                  <div className="resourceList">
-                    <div className="infoData">
-                      <h6>resources</h6>
-                    </div>
-                    <div className="infoValue">
-                      <h6>updated</h6>
-                    </div>
-                  </div>
-                </li>
-                {data.resources.map((item, id) => {
-                  return (
-                    <li key={id}>
-                      <div className="resourceList">
-                        <div className="infoData">
-                          <h6>
-                            <strong>{item.resource}</strong> <br />
-                            <strong>{item.quantity}</strong> Available
-                          </h6>
-                        </div>
-                        <div className="infoValue">
-                          <h6>
-                            <strong>{item.updated}</strong>, 2021 <br />
-                          </h6>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              {/* Contacts */}
-              <ul>
-                <li>
-                  <div className="resourceList">
-                    <div className="infoData">
-                      <h6>contacts</h6>
-                    </div>
-                    <div className="infoValue"></div>
-                  </div>
-                </li>
-                {data.contacts.map((item, id) => {
-                  return (
-                    <li key={id}>
-                      <div className="resourceList">
-                        <div className="infoData">
-                          <h6>
-                            <strong>{item.contactPersonName}</strong> <br />
-                          </h6>
-                        </div>
-                        <div className="infoValue">
-                          <h6>
-                            <strong>{item.phoneNumber}</strong>
-                            <br />
-                          </h6>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <Resources providerID={data.findProviderbySlug._id} />
+              <Contacts providerID={data.findProviderbySlug._id} />
 
               {/* Address */}
               <ul>
@@ -172,7 +83,7 @@ export default function OrganisationPage() {
                   <div className="resourceList">
                     <div className="infoData">
                       <h6>
-                        <strong>{data.address}</strong>
+                        <strong>{data.findProviderbySlug.address}</strong>
                       </h6>
                     </div>
                     <div className="infoValue">
@@ -206,7 +117,10 @@ export default function OrganisationPage() {
           <Map
             height={"100vh"}
             width={isMobile() ? "100vw" : "50vw"}
-            currentPosition={data.location}
+            currentPosition={{
+              lat: data.findProviderbySlug.location.latitude,
+              lng: data.findProviderbySlug.location.longitude,
+            }}
             zoom={14}
             hideMapSearch={true}
           />

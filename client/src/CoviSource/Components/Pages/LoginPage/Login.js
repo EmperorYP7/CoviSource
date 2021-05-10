@@ -21,7 +21,6 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import "./Login.scss";
 
 import image from "assets/img/bg7.jpg";
-import { useHistory } from "react-router-dom";
 
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "CoviSource/graphql/mutations/User/Login";
@@ -53,10 +52,9 @@ export default function Login(props) {
     });
   };
 
-  const handleSubmit = async (event) => {
-    const history = useHistory();
+  const handleSubmit = (event) => {
     event.preventDefault();
-    await login({
+    login({
       variables: {
         input: {
           email: formData.email,
@@ -64,15 +62,15 @@ export default function Login(props) {
         },
       },
     });
-    if (!loading && data !== undefined) {
-      alert("Login Sucessfull!");
-      alert(`Your details: \n
-        ID: ${data.login.user._id}\n
-        Name: ${data.login.user.name}\n
-        Contact Number: ${data.login.user.phoneNumber}\n
-      `);
-      console.log(data.login.user);
-      history.push("/");
+    if (!loading) {
+      if (data) {
+        if (data.login.errors) {
+          alert(data.login.errors[0].message);
+        } else {
+          alert("Logged In!");
+          window.location.assign("/");
+        }
+      }
     }
   };
 
