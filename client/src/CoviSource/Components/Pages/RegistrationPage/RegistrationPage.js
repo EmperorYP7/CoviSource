@@ -46,7 +46,7 @@ export default function RegistrationPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
-  const [addUser, { data, loading }] = useMutation(ADD_USER);
+  const [addUser, { data, loading, error }] = useMutation(ADD_USER);
 
   const scrollChangeData = {
     height: 5,
@@ -72,8 +72,18 @@ export default function RegistrationPage(props) {
         },
       },
     });
-    if (!loading && !data) {
-      alert("Registration successfull!");
+    if (loading);
+    if (error) {
+      alert(error);
+    }
+    if (data) {
+      if (data.register.errors) {
+        alert(data.register.errors[0].message);
+      }
+      if (data.register.user) {
+        alert("Registration sucessful!");
+        window.location.assign("/");
+      }
     }
   };
 
