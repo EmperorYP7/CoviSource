@@ -14,6 +14,8 @@ import Button from "CoviSource/Components/UtilityComponents/Button/Button.js";
 import styles from "assets/jss/material-kit-react/views/componentsSections/basicsStyle.js";
 import "./CardView.scss";
 import { isMobile } from "CoviSource/UtilityFunctions";
+import { useQuery } from "@apollo/client";
+import { GET_RESOURCES } from "CoviSource/graphql/queries/Provider/GetResources";
 const useStyles = makeStyles(styles);
 
 const status = {
@@ -30,6 +32,9 @@ CardView.propTypes = {
 
 export default function CardView(props) {
   const [data, setData] = useState(props.data);
+  if (data === []) {
+    return <>No data</>;
+  }
   const [resourceType, setResourceType] = useState("ALL"); // oneOf["ALL", "AVAILABLE", "UNUPDATED", "UNAVAIBALE"]
   if (data === null) {
     setData("");
@@ -94,91 +99,59 @@ export default function CardView(props) {
         </div>
         <div id="nav-tabs">
           <GridContainer>
-            {data.map((details, key) => {
-              if (
-                resourceType === "ALL" ||
-                resourceType === details["availability"]
-              ) {
+            {data.map((provider, _id) => {
+              var availability;
+              // 10 minutes
+              if (Date.now() - provider.updatedAt <= 600000) {
+                availability = "AVAILABLE";
+              } else {
+                availability = "UNUPDATED";
+              }
+              if (resourceType === "ALL" || resourceType === availability) {
                 return (
-                  <GridItem key={key} xs={12} sm={12} md={6}>
+                  <GridItem key={_id} xs={12} sm={12} md={6}>
                     <CustomTabs
                       title={
                         <h6 onClick={shareIconClick} style={style}>
                           {isMobile() ? "" : "share "}
                           <i
-                            name={details["resourceProviderName"]}
+                            name={`${provider.providerName}`}
                             className="fas fa-share"
                           ></i>
                         </h6>
                       }
                       rtlActive={true}
-                      headerColor={status[details["availability"]]}
+                      headerColor={status[availability]}
                       tabs={[
                         {
                           tabName: "AVAILABILITY",
-                          tabContent: (
-                            <ul className="cardViewList">
-                              {details.resources.map((item, id) => {
-                                return (
-                                  <li
-                                    key={id}
-                                    className={status[details["availability"]]}
-                                  >
-                                    <div className="data">
-                                      <div className="dataResource">
-                                        <h6>{item.resource}</h6>
-                                      </div>
-                                      <div className="dataQuantity">
-                                        <p>
-                                          <span>{item.quantity} </span>available
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <div className="info">
-                                      <div className="updateTag">
-                                        <h6>updated</h6>
-                                      </div>
-                                      <div className="updateInfo">
-                                        <p>
-                                          <span>{item.updated} </span>, 2021
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          ),
+                          tabContent: ResourceDetail(provider._id),
                         },
                         {
                           tabName: "DETAILS",
                           // tabIcon: Share,
                           tabContent: (
                             <ul className="cardViewList">
-                              <li
-                                className={
-                                  status[details["availability"]] + " detail"
-                                }
-                              >
+                              <li className={status[availability] + " detail"}>
                                 <div className="details">
                                   <div className="detailsInfo">
                                     <h6>ADDRESS</h6>
                                   </div>
                                   <div className="detailsData">
                                     <p>
-                                      <span>{details.address}</span>
+                                      <span>{provider.address}</span>
                                     </p>
                                   </div>
                                 </div>
                               </li>
-                              <li className={status[details["availability"]]}>
+                              <li className={status[availability]}>
                                 <div className="data">
                                   <div className="dataResource">
                                     <h6>contact</h6>
                                   </div>
                                   <div className="dataQuantity">
                                     <p>
-                                      <span>{details.contactPersonName}</span>
+                                      <span>{provider.contactPersonName}</span>
                                     </p>
                                   </div>
                                 </div>
@@ -188,25 +161,19 @@ export default function CardView(props) {
                                   </div>
                                   <div className="updateInfo">
                                     <p>
-                                      <span>{details.contactNumber}</span>
+                                      <span>{provider.phoneNumber}</span>
                                     </p>
                                   </div>
                                 </div>
                               </li>
-                              <li
-                                className={
-                                  status[details["availability"]] + " detail"
-                                }
-                              >
+                              <li className={status[availability] + " detail"}>
                                 <div className="details">
                                   <div className="detailsInfo">
-                                    <h6>{details.serviceName}</h6>
+                                    <h6>{provider.serviceName}</h6>
                                   </div>
                                   <div className="detailsData">
                                     <p>
-                                      <span>
-                                        {details.resourceProviderName}
-                                      </span>
+                                      <span>{provider.providerName}</span>
                                     </p>
                                   </div>
                                 </div>
@@ -219,7 +186,7 @@ export default function CardView(props) {
                         <h6
                           className="footerLink"
                           onClick={moreDetails}
-                          name={details.resourceProviderName}
+                          name={provider.slug}
                         >
                           More details ...
                         </h6>
@@ -236,4 +203,55 @@ export default function CardView(props) {
       </div>
     </div>
   );
+}
+
+function ResourceDetail(Providerid) {
+  const { loading, data, error } = useQuery(GET_RESOURCES, {
+    variables: {
+      id: Providerid,
+    },
+  });
+  if (loading) return <>Loading...</>;
+  if (error) {
+    alert(error);
+    return <>Error!</>;
+  }
+  if (data) {
+    if (data.getResource) {
+      return (
+        <ul className="cardViewList">
+          {data.getResource.map((resource, id) => {
+            var date = new Date(parseInt(resource.updatedAt));
+            return (
+              <li
+                key={id}
+                // className={status[provider["availability"]]}
+              >
+                <div className="data">
+                  <div className="dataResource">
+                    <h6>{resource.name}</h6>
+                  </div>
+                  <div className="dataQuantity">
+                    <p>
+                      <span>{resource.quantity} </span>available
+                    </p>
+                  </div>
+                </div>
+                <div className="info">
+                  <div className="updateTag">
+                    <h6>updated</h6>
+                  </div>
+                  <div className="updateInfo">
+                    <p>
+                      <span>{date.toLocaleString()}</span>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+  }
 }

@@ -1,9 +1,11 @@
 import { User } from '../entities/User';
 import { MyContext } from '../types';
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 import { getConnection } from 'typeorm';
+import { isAuth } from '../middleware/isAuth';
+import { Provider } from '../entities/Provider';
 
 @InputType()
 class UsernamePasswordInput {
@@ -23,7 +25,7 @@ class UserRegisterInput {
     password: string
 
     @Field()
-    contactNumber: string
+    phoneNumber: string
 
     @Field()
     name: string
@@ -70,6 +72,14 @@ export class UserResolver {
         @Arg('input') input: UserRegisterInput,
         @Ctx() { req }: MyContext
     ): Promise<UserResponse> {
+        if (req.session.userID) {
+            return {
+                errors: [{
+                    field: "user",
+                    message: "Already logged in"
+                }]
+            }
+        }
         if (input.email.length <= 4 || !input.email.includes('@')) {
             return {
                 errors: [{
@@ -86,10 +96,10 @@ export class UserResolver {
                 }]
             }
         }
-        if (input.contactNumber.length < 10) {
+        if (input.phoneNumber.length < 10 || input.phoneNumber.length > 13) {
             return {
                 errors: [{
-                    field: "contactNumber",
+                    field: "phoneNumber",
                     message: "Contact number is invalid. Enter 10 Digit number"
                 }]
             }
@@ -106,36 +116,29 @@ export class UserResolver {
         let user;
         try {
             const result = await getConnection()
-                        .createQueryBuilder()
-                        .insert()
-                        .into(User)
-                        .values([{
-                            email: input.email,
-                            password: hasedPassword,
-                            name: input.name,
-                            contactNumber: input.contactNumber,
-                            providerID: req.session.providerID || undefined,
-                        }])
-                        .execute();
-            user = result.raw;
+                .createQueryBuilder()
+                .insert()
+                .into(User)
+                .values([{
+                    email: input.email,
+                    password: hasedPassword,
+                    name: input.name,
+                    phoneNumber: input.phoneNumber,
+                    providerID: undefined,
+                }])
+                .returning('*')
+                .execute();
+            user = result.raw[0];
         } catch (err) {
-            return {
-                errors: [{
-                    field: "THAT error :/",
-                    message: err,
-                }
-                ]
-            }
-        }
-
-        if (typeof user === 'undefined') {
-            return {
-                errors: [
-                    {
-                        field: "password",
-                        message: "Not a valid password"
-                    }
-                ]
+            if (err.detail.includes("already exists")) {
+                return {
+                    errors: [
+                        {
+                            field: "username",
+                            message: "This user already exists!"
+                        }
+                    ]
+                };
             }
         }
         // Store userID session
@@ -147,8 +150,16 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async login(
         @Arg('input') input: UsernamePasswordInput,
-        @Ctx() {req} : MyContext
-    ) : Promise<UserResponse> {
+        @Ctx() { req } : MyContext
+    ): Promise<UserResponse> {
+        if (req.session.userID !== undefined) {
+            return {
+                errors: [{
+                    field: "email",
+                    message: "You're already logged in!",
+                }]
+            }
+        }
         const user = await User.findOne({where: { email: input.email }});
         if (!user) {
             return {
@@ -167,11 +178,16 @@ export class UserResolver {
                 }]
             }
         }
+        const provider = await Provider.findOne({ where: { ownerID: user._id } });
         req.session.userID = user._id;
+        if (provider) {
+            req.session.providerID = provider._id;
+        }
         return { user };
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     logout(
         @Ctx() {req, res}: MyContext
     ) {
@@ -182,7 +198,7 @@ export class UserResolver {
                     resolve(false);
                     return;
                 }
-                res.clearCookie(COOKIE_NAME as string);
+                res.clearCookie(COOKIE_NAME);
                 resolve(true);
             })
         )

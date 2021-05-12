@@ -1,7 +1,10 @@
 import { Provider } from '../entities/Provider';
-import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
 import slugify from 'slugify';
 import { MyContext } from 'src/types';
+import { isAuth } from '../middleware/isAuth';
+import { isRegistered } from '../middleware/isRegistered';
+import { getRepository } from 'typeorm';
 
 @InputType()
 class LocationTemplate {
@@ -10,15 +13,6 @@ class LocationTemplate {
 
     @Field()
     longitude: number;
-}
-
-@InputType()
-class ContactTemplate {
-    @Field()
-    name: string;
-
-    @Field()
-    number: string;
 }
 
 @InputType()
@@ -31,47 +25,45 @@ class NewProviderInput {
 
     @Field(() => LocationTemplate)
     location: LocationTemplate;
-
-    @Field(() => [ContactTemplate])
-    contacts: [ContactTemplate];
 }
 
 @Resolver()
 export class ProviderResolver {
     @Query(() => [Provider])
     allProviders(): Promise<Provider[]> {
-        return Provider.find();
+        const providerRepository = getRepository(Provider);
+        return providerRepository.find();
     }
 
     @Query(() => Provider, { nullable: true })
-    findProvider(
-        @Arg('id', () => Int) id: number,
+    @UseMiddleware(isAuth, isRegistered)
+    myProvider(
+        @Ctx() { req }: MyContext
     ): Promise<Provider | undefined> {
-        return Provider.findOne(id);
+        return Provider.findOne(req.session.providerID);
     }
 
     @Query(() => Provider, { nullable: true })
     findProviderbySlug(
         @Arg('slug', () => String) slug: string,
     ): Promise<Provider | undefined> {
-        return Provider.findOne({slug: slug});
+        return Provider.findOne({ where: { slug: slug } });
     }
 
     @Mutation(() => Provider)
+    @UseMiddleware(isAuth)
     async createProvider(
         @Arg('input') input: NewProviderInput,
         @Ctx() { req }: MyContext
-        // @UseMiddleware(onAuth)
     ): Promise<Provider | undefined> {
-        if (typeof req.session.providerID !== 'undefined') {
+        if (req.session.providerID) {
             throw Error("Provider already created!");
         }
         var provider;
         try {
             provider = await Provider.create({
                 ...input,
-                location: input.location,
-                slug: slugify(input.providerName),
+                slug: slugify(input.providerName, { lower: true }),
                 ownerID: req.session.userID,
                 resources: [],
             }).save();
@@ -82,22 +74,31 @@ export class ProviderResolver {
         return provider;
     }
 
-    @Mutation(() => Provider, {nullable: true})
+    @Mutation(() => Provider, { nullable: true })
+    @UseMiddleware(isAuth, isRegistered)
     async updateProvider(
-        @Arg('id', () => Int) id: number,
-        @Arg('providerName', () => String) providerName: string,
+        @Arg('input') input: NewProviderInput,
+        @Ctx() { req }: MyContext
     ): Promise<Provider | null> {
-        const provider = await Provider.findOne(id);
+        const provider = await Provider.findOne(req.session.providerID);
         if (!provider) {
             return null;
         }
-        if (typeof providerName !== 'undefined') {
-            await Provider.update(id, { providerName: providerName, slug: slugify(providerName, { lower: true }) });
+        if (provider) {
+            await Provider.update(req.session.providerID as number, {
+                ...input,
+                slug: slugify(input.providerName, { lower: true }),
+            });
         }
-        return provider;
+        const updatedProvider = await Provider.findOne(req.session.providerID);
+        if (updatedProvider) {
+            return updatedProvider;
+        }
+        return null;
     }
 
-    @Mutation(() => Boolean, {nullable: true})
+    @Mutation(() => Boolean, { nullable: true })
+    @UseMiddleware(isAuth, isRegistered)
     async deleteProvider(
         @Arg('id', () => Int) id: number,
     ): Promise<boolean> {
@@ -108,4 +109,5 @@ export class ProviderResolver {
         }
         return true;
     }
+
 }

@@ -33,6 +33,7 @@
   "homepage": "https://github.com/EmperorYP7/CoviSource#readme",
   "devDependencies": {
     "@types/connect-redis": "^0.0.16",
+    "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
     "@types/express-session": "^1.17.3",
     "@types/node": "^15.0.0",

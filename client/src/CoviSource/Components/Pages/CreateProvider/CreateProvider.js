@@ -23,6 +23,9 @@ import "./CreateProvider.scss";
 
 import image from "assets/img/bg7.jpg";
 import CreateContact from "./CreateContact";
+import { useMutation } from "@apollo/client";
+import { CREATE_PROVIDER } from "CoviSource/graphql/mutations/Provider/CreateProvider";
+import CreateResource from "./CreateResource";
 // import Map from "CoviSource/Components/UtilityComponents/Map/Map";
 
 const useStyles = makeStyles(styles);
@@ -36,9 +39,12 @@ const formReducer = (state, event) => {
 
 export default function CreateProvider(props) {
   const [formData, setFormData] = useReducer(formReducer, {});
-  const [resourceData, setresourceData] = useReducer(formReducer, {});
+  const [resourceData, setresourceData] = useState({});
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   const [numberContact, setNumberContact] = useState(0);
+  const [createProvider, { loading, data, error }] = useMutation(
+    CREATE_PROVIDER
+  );
 
   setTimeout(function () {
     setCardAnimation("");
@@ -58,11 +64,35 @@ export default function CreateProvider(props) {
     });
     console.log(formData);
   };
-
   const handleSubmit = (event) => {
-    console.log(formData);
     event.preventDefault();
-    // console.log(resourceData);
+    createProvider({
+      variables: {
+        input: {
+          providerName: formData.providerName,
+          address: formData.address,
+          location: {
+            latitude: formData.latitude * 1.0,
+            longitude: formData.longitude * 1.0,
+          },
+        },
+      },
+    });
+    if (!loading) {
+      if (data) {
+        if (data.createProvider.provider) {
+          alert(
+            "Created Provider: ",
+            data.createProvider.provider.providerName
+          );
+          window.location.assign("/" + data.createProvider.provider.slug);
+        } else if (data.createProvider.errors) {
+          alert(data.createProvider.errors[0].message);
+        }
+      } else if (error) {
+        alert(error);
+      }
+    }
   };
 
   return (
@@ -85,7 +115,7 @@ export default function CreateProvider(props) {
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={4}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+                <form className={classes.form} onSubmit={handleSubmit}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Register your Institute/Provider</h4>
                   </CardHeader>
@@ -171,21 +201,18 @@ export default function CreateProvider(props) {
                   >
                     + Add Contacts
                   </Button>
-                  {/* {
-                  } */}
                   <CreateContact
                     classes={classes}
                     resourceData={resourceData}
                     setresourceData={setresourceData}
                   />
+                  <CreateResource
+                    classes={classes}
+                    resourceData={resourceData}
+                    setresourceData={setresourceData}
+                  />
                   <CardFooter className={classes.cardFooter}>
-                    <Button
-                      simple
-                      color="primary"
-                      size="lg"
-                      type="submit"
-                      onSubmit={handleSubmit}
-                    >
+                    <Button simple color="primary" size="lg" type="submit">
                       Register
                     </Button>
                   </CardFooter>
