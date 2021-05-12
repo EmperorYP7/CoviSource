@@ -33,6 +33,7 @@ export default function Resources({ providerID }) {
           </div>
         </li>
         {data.getResource.map((item, id) => {
+          var date = new Date(parseInt(item.updatedAt));
           return (
             <li key={id}>
               <div className="resourceList">
@@ -44,7 +45,8 @@ export default function Resources({ providerID }) {
                 </div>
                 <div className="infoValue">
                   <h6>
-                    <strong>{item.updatedAt.toString()}</strong>, 2021 <br />
+                    <strong>{date.toLocaleString()}</strong>
+                    <br />
                   </h6>
                 </div>
               </div>

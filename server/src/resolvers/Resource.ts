@@ -108,6 +108,7 @@ export class ResourceResolver {
     @UseMiddleware(isAuth, isRegistered)
     async updateResource(
         @Arg('input') input: ResourceUpdateInput,
+        @Ctx() { req } : MyContext
     ): Promise<ResourceResponse | undefined> {
         if (input.name.length <= 3) {
             return {
@@ -134,9 +135,12 @@ export class ResourceResolver {
                 }]
             }
         } else {
-            await Resource.update(input.id, {
+            await Resource.update({
                 name: input.name,
                 quantity: input.quantity
+            }, {
+                id: input.id,
+                providerID: req.session.providerID
             });
     
             return { resource };

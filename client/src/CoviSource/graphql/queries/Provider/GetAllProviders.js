@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_ALL_PROVIDERS = gql`
   query GetAllProviders {
     allProviders {
-      id
+      _id
       providerName
       address
       location {
