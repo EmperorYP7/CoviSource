@@ -101,7 +101,8 @@ export default function CardView(props) {
           <GridContainer>
             {data.map((provider, _id) => {
               var availability;
-              if (Date.now() - provider.updatedAt <= 500) {
+              // 10 minutes
+              if (Date.now() - provider.updatedAt <= 600000) {
                 availability = "AVAILABLE";
               } else {
                 availability = "UNUPDATED";
@@ -220,6 +221,7 @@ function ResourceDetail(Providerid) {
       return (
         <ul className="cardViewList">
           {data.getResource.map((resource, id) => {
+            var date = new Date(parseInt(resource.updatedAt));
             return (
               <li
                 key={id}
@@ -241,7 +243,7 @@ function ResourceDetail(Providerid) {
                   </div>
                   <div className="updateInfo">
                     <p>
-                      <span>{resource.updatedAt} </span>, 2021
+                      <span>{date.toLocaleString()}</span>
                     </p>
                   </div>
                 </div>
