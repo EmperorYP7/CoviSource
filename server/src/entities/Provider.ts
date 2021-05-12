@@ -18,11 +18,13 @@ export class Provider extends BaseEntity {
     @Column()
     address!: string;
 
-    @OneToMany(() => Resource, resource => resource.provider)
+    @Field(() => [Resource], { nullable: true })
+    @OneToMany(() => Resource, resource => resource.provider, { eager: true })
     @JoinColumn()
     resources: Resource[];
 
-    @OneToMany(() => Contact, contact => contact.provider)
+    @Field(() => [Contact], { nullable: true })
+    @OneToMany(() => Contact, contact => contact.provider, { eager: true })
     @JoinColumn()
     contacts: Contact[];
 

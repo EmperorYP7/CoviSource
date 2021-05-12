@@ -4,6 +4,7 @@ import slugify from 'slugify';
 import { MyContext } from 'src/types';
 import { isAuth } from '../middleware/isAuth';
 import { isRegistered } from '../middleware/isRegistered';
+import { getRepository } from 'typeorm';
 
 @InputType()
 class LocationTemplate {
@@ -30,7 +31,8 @@ class NewProviderInput {
 export class ProviderResolver {
     @Query(() => [Provider])
     allProviders(): Promise<Provider[]> {
-        return Provider.find();
+        const providerRepository = getRepository(Provider);
+        return providerRepository.find();
     }
 
     @Query(() => Provider, { nullable: true })
@@ -107,4 +109,5 @@ export class ProviderResolver {
         }
         return true;
     }
+
 }

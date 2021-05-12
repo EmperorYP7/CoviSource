@@ -22,10 +22,9 @@ const main = async () => {
     const app = express();
 
     const RedisStore = connectRedis(session);
-    const redis = new Redis({
-        port: process.env.REDIS_PORT as unknown as number,
-        host: process.env.REDIS_HOST,
-    });
+    const redis = new Redis(process.env.REDIS_URL);
+
+    app.set("trust proxy", 1);
 
     app.use(
         cors({
@@ -45,7 +44,8 @@ const main = async () => {
                 maxAge: COOKIE_MAX_AGE,
                 httpOnly: true,
                 secure: __prod__,
-                sameSite: 'lax'
+                sameSite: 'lax',
+                domain: __prod__ ? '.emperoryp.live' : undefined,
             },
             saveUninitialized: false,
             secret: process.env.SESSION_SECRET,
@@ -56,16 +56,21 @@ const main = async () => {
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers: [ProviderResolver, UserResolver, ResourceResolver, ContactResolver],
-            validate: false
+            validate: false,
         }),
-        context: ({ req, res }) : MyContext => ({ req, res, redis })
+        context: ({ req, res }): MyContext => ({ req, res, redis }),
     });
 
-    apolloServer.applyMiddleware({ app, cors: false }); 
+    apolloServer.applyMiddleware({
+        app,
+        cors: false,
+    });
 
     app.listen(parseInt(process.env.PORT), () => {
         console.log("connected to DB!");
     });
 };
 
-main();
+main().catch((err) => {
+  console.error(err);
+});
