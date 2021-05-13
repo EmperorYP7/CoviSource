@@ -62,7 +62,6 @@ export default function CreateProvider(props) {
       name: event.target.name,
       value: event.target.value,
     });
-    console.log(formData);
   };
   const handleSubmit = (event) => {
     event.preventDefault();

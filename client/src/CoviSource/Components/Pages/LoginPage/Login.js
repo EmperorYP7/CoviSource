@@ -84,7 +84,6 @@ export default function Login(props) {
   };
 
   const googleSuccess = async (res) => {
-    console.log(res);
     await login({
       variables: {
         input: {
@@ -108,7 +107,7 @@ export default function Login(props) {
     }
   };
   const googleFailure = () => {
-    console.log("Google Signin was unsucessfull.");
+    alert("Google Signin was unsucessfull.");
   };
 
   return (

@@ -30,6 +30,7 @@ import GoogleLogin from "react-google-login";
 
 const useStyles = makeStyles(styles);
 
+// To map each entry field to its value
 const formReducer = (state, event) => {
   return {
     ...state,
@@ -46,6 +47,7 @@ export default function RegistrationPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  // addUser mutation
   const [addUser, { data, loading, error }] = useMutation(ADD_USER);
 
   const scrollChangeData = {
@@ -53,6 +55,7 @@ export default function RegistrationPage(props) {
     color: "white",
   };
 
+  // Handling change for individual entries of form data
   const handleChange = (event) => {
     setFormData({
       name: event.target.name,
@@ -60,6 +63,7 @@ export default function RegistrationPage(props) {
     });
   };
 
+  // Submit function to call the mutation
   const handleSubmit = (event) => {
     event.preventDefault();
     addUser({
@@ -72,21 +76,27 @@ export default function RegistrationPage(props) {
         },
       },
     });
+    // If loading then do nothing
     if (loading);
+    // If error, alert the user
     if (error) {
       alert(error);
     }
     if (data) {
+      // If backend sends an error, alert the user
       if (data.register.errors) {
         alert(data.register.errors[0].message);
       }
+      // Success
       if (data.register.user) {
         alert("Registration sucessful!");
+        // Send to homepage
         window.location.assign("/");
       }
     }
   };
 
+  // On obtaining valid Google OAuth tokens
   const googleSuccess = async (res) => {
     await addUser({
       variables: {
@@ -112,8 +122,10 @@ export default function RegistrationPage(props) {
       }
     }
   };
+
+  // On invalid Google OAuth
   const googleFailure = () => {
-    console.log("Google Signin was unsucessfull.");
+    alert("Google Signup was unsucessfull");
   };
 
   return (
