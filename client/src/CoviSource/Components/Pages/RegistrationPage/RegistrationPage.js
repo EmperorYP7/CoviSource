@@ -5,7 +5,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import People from "@material-ui/icons/People";
-// import Hospital from "@material-ui/icons/LocalHospital";
 import Password from "@material-ui/icons/Lock";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -27,6 +26,7 @@ import Phone from "@material-ui/icons/Phone";
 
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "CoviSource/graphql/mutations/User/AddUser";
+import GoogleLogin from "react-google-login";
 
 const useStyles = makeStyles(styles);
 
@@ -87,6 +87,35 @@ export default function RegistrationPage(props) {
     }
   };
 
+  const googleSuccess = async (res) => {
+    await addUser({
+      variables: {
+        input: {
+          name: `${res.profileObj.givenName} ${res.profileObj.familyName}`,
+          email: res.profileObj.email,
+          phoneNumber: `${res.profileObj.googleId}`.substring(0, 10),
+          password: res.qc.login_hint,
+        },
+      },
+    });
+    if (loading);
+    if (error) {
+      alert(error);
+    }
+    if (data) {
+      if (data.register.errors) {
+        alert(data.register.errors[0].message);
+      }
+      if (data.register.user) {
+        alert("Registration sucessful!");
+        window.location.assign("/");
+      }
+    }
+  };
+  const googleFailure = () => {
+    console.log("Google Signin was unsucessfull.");
+  };
+
   return (
     <div>
       <Header
@@ -111,15 +140,25 @@ export default function RegistrationPage(props) {
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Register Yourself</h4>
                     <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
-                      </Button>
+                      <GoogleLogin
+                        clientId={process.env.REACT_APP_GOOGLE_OAUTH}
+                        render={(renderProps) => (
+                          <Button
+                            justIcon
+                            href="#pablo"
+                            target="_blank"
+                            color="transparent"
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                            variant="contained"
+                          >
+                            <i className={"fab fa-google-plus-g"} />
+                          </Button>
+                        )}
+                        onSuccess={googleSuccess}
+                        onFailure={googleFailure}
+                        cookiePolicy="single_host_origin"
+                      />
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>

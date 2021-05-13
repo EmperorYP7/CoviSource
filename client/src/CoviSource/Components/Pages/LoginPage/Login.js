@@ -24,6 +24,7 @@ import image from "assets/img/bg7.jpg";
 
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "CoviSource/graphql/mutations/User/Login";
+import GoogleLogin from "react-google-login";
 
 const useStyles = makeStyles(styles);
 
@@ -43,7 +44,7 @@ export default function Login(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
-  const [login, { data, loading }] = useMutation(LOGIN);
+  const [login, { data, error, loading }] = useMutation(LOGIN);
 
   const handleChange = (event) => {
     setFormData({
@@ -62,14 +63,17 @@ export default function Login(props) {
         },
       },
     });
-    if (!loading) {
-      if (data) {
-        if (data.login.errors) {
-          alert(data.login.errors[0].message);
-        } else {
-          alert("Logged In!");
-          window.location.assign("/");
-        }
+    if (loading);
+    if (error) {
+      alert(error);
+      return;
+    }
+    if (data) {
+      if (data.login.errors) {
+        alert(data.login.errors[0].message);
+      } else {
+        alert("Logged In!");
+        window.location.assign("/");
       }
     }
   };
@@ -77,6 +81,34 @@ export default function Login(props) {
   const scrollChangeData = {
     height: 5,
     color: "white",
+  };
+
+  const googleSuccess = async (res) => {
+    console.log(res);
+    await login({
+      variables: {
+        input: {
+          email: res.profileObj.email,
+          password: res.qc.login_hint,
+        },
+      },
+    });
+    if (loading);
+    if (error) {
+      alert(error);
+      return;
+    }
+    if (data) {
+      if (data.login.errors) {
+        alert(data.login.errors[0].message);
+      } else {
+        alert("Logged In!");
+        window.location.assign("/");
+      }
+    }
+  };
+  const googleFailure = () => {
+    console.log("Google Signin was unsucessfull.");
   };
 
   return (
@@ -103,15 +135,25 @@ export default function Login(props) {
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Login</h4>
                     <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
-                      </Button>
+                      <GoogleLogin
+                        clientId={process.env.REACT_APP_GOOGLE_OAUTH}
+                        render={(renderProps) => (
+                          <Button
+                            justIcon
+                            href="#pablo"
+                            target="_blank"
+                            color="transparent"
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                            variant="contained"
+                          >
+                            <i className={"fab fa-google-plus-g"} />
+                          </Button>
+                        )}
+                        onSuccess={googleSuccess}
+                        onFailure={googleFailure}
+                        cookiePolicy="single_host_origin"
+                      />
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
