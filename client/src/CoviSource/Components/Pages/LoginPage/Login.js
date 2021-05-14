@@ -22,9 +22,10 @@ import "./Login.scss";
 
 import image from "assets/img/bg7.jpg";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { LOGIN } from "CoviSource/graphql/mutations/User/Login";
 import GoogleLogin from "react-google-login";
+import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
 
 const useStyles = makeStyles(styles);
 
@@ -45,6 +46,17 @@ export default function Login(props) {
   const { ...rest } = props;
 
   const [login, { data, error, loading }] = useMutation(LOGIN);
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(GET_USER);
+
+  if (queryLoading) return <>Loading...</>;
+  if (queryError) return <>Error</>;
+  if (queryData.me) {
+    window.location.assign("/");
+  }
 
   const handleChange = (event) => {
     setFormData({

@@ -24,8 +24,9 @@ import "./RegistrationPage.scss";
 import image from "assets/img/bg2.jpg";
 import Phone from "@material-ui/icons/Phone";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { ADD_USER } from "CoviSource/graphql/mutations/User/AddUser";
+import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
 import GoogleLogin from "react-google-login";
 
 const useStyles = makeStyles(styles);
@@ -46,6 +47,18 @@ export default function RegistrationPage(props) {
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
+
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(GET_USER);
+
+  if (queryLoading) return <>Loading...</>;
+  if (queryError) return <>Error</>;
+  if (queryData.me) {
+    window.location.assign("/");
+  }
 
   // addUser mutation
   const [addUser, { data, loading, error }] = useMutation(ADD_USER);

@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
 import LocationCity from "@material-ui/icons/LocationCity";
-// import People from "@material-ui/icons/People";
 import Hospital from "@material-ui/icons/LocalHospital";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -23,10 +22,10 @@ import "./CreateProvider.scss";
 
 import image from "assets/img/bg7.jpg";
 import CreateContact from "./CreateContact";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PROVIDER } from "CoviSource/graphql/mutations/Provider/CreateProvider";
 import CreateResource from "./CreateResource";
-// import Map from "CoviSource/Components/UtilityComponents/Map/Map";
+import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
 
 const useStyles = makeStyles(styles);
 
@@ -40,6 +39,16 @@ const formReducer = (state, event) => {
 export default function CreateProvider(props) {
   const [formData, setFormData] = useReducer(formReducer, {});
   const [resourceData, setresourceData] = useState({});
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(GET_USER);
+  if (queryLoading) return <>Loading...</>;
+  if (queryError) return <>Error</>;
+  if (queryData.me === null) {
+    window.location.assign("/login");
+  }
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   const [numberContact, setNumberContact] = useState(0);
   const [createProvider, { loading, data, error }] = useMutation(
