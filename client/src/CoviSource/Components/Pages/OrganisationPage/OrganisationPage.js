@@ -31,9 +31,6 @@ export default function OrganisationPage() {
     console.log(error);
     return <>Error</>;
   }
-  if (data) {
-    console.log(data);
-  }
 
   const getBannerClass = function () {
     return "banner banner" + status[data.availability];

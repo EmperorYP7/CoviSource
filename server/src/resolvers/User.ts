@@ -67,6 +67,18 @@ export class UserResolver {
         return User.find();
     }
 
+    @Mutation(() => Boolean)
+    async deleteUser(
+        @Arg('id') id: number,
+    ): Promise<boolean> {
+        try {
+            await User.delete(id);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+
     @Mutation(() => UserResponse)
     async register(
         @Arg('input') input: UserRegisterInput,

@@ -44,8 +44,8 @@ const main = async () => {
                 maxAge: COOKIE_MAX_AGE,
                 httpOnly: true,
                 secure: __prod__,
-                sameSite: 'lax',
-                domain: __prod__ ? '.emperoryp.live' : undefined,
+                sameSite: 'lax',  // CSRF
+                domain: __prod__ ? '.covisource.tech' : undefined,
             },
             saveUninitialized: false,
             secret: process.env.SESSION_SECRET,
