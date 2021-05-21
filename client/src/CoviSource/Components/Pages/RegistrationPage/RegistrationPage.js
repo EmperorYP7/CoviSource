@@ -5,7 +5,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import People from "@material-ui/icons/People";
-// import Hospital from "@material-ui/icons/LocalHospital";
 import Password from "@material-ui/icons/Lock";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -25,11 +24,14 @@ import "./RegistrationPage.scss";
 import image from "assets/img/bg2.jpg";
 import Phone from "@material-ui/icons/Phone";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { ADD_USER } from "CoviSource/graphql/mutations/User/AddUser";
+import { GET_USER } from "CoviSource/graphql/queries/User/GetUser";
+import GoogleLogin from "react-google-login";
 
 const useStyles = makeStyles(styles);
 
+// To map each entry field to its value
 const formReducer = (state, event) => {
   return {
     ...state,
@@ -46,6 +48,19 @@ export default function RegistrationPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(GET_USER);
+
+  if (queryLoading) return <>Loading...</>;
+  if (queryError) return <>Error</>;
+  if (queryData.me) {
+    window.location.assign("/");
+  }
+
+  // addUser mutation
   const [addUser, { data, loading, error }] = useMutation(ADD_USER);
 
   const scrollChangeData = {
@@ -53,6 +68,7 @@ export default function RegistrationPage(props) {
     color: "white",
   };
 
+  // Handling change for individual entries of form data
   const handleChange = (event) => {
     setFormData({
       name: event.target.name,
@@ -60,6 +76,7 @@ export default function RegistrationPage(props) {
     });
   };
 
+  // Submit function to call the mutation
   const handleSubmit = (event) => {
     event.preventDefault();
     addUser({
@@ -69,6 +86,38 @@ export default function RegistrationPage(props) {
           email: formData.email,
           phoneNumber: formData.phoneNumber,
           password: formData.password,
+        },
+      },
+    });
+    // If loading then do nothing
+    if (loading);
+    // If error, alert the user
+    if (error) {
+      alert(error);
+    }
+    if (data) {
+      // If backend sends an error, alert the user
+      if (data.register.errors) {
+        alert(data.register.errors[0].message);
+      }
+      // Success
+      if (data.register.user) {
+        alert("Registration sucessful!");
+        // Send to homepage
+        window.location.assign("/");
+      }
+    }
+  };
+
+  // On obtaining valid Google OAuth tokens
+  const googleSuccess = async (res) => {
+    await addUser({
+      variables: {
+        input: {
+          name: `${res.profileObj.givenName} ${res.profileObj.familyName}`,
+          email: res.profileObj.email,
+          phoneNumber: `${res.profileObj.googleId}`.substring(0, 10),
+          password: res.qc.login_hint,
         },
       },
     });
@@ -85,6 +134,11 @@ export default function RegistrationPage(props) {
         window.location.assign("/");
       }
     }
+  };
+
+  // On invalid Google OAuth
+  const googleFailure = () => {
+    alert("Google Signup was unsucessfull");
   };
 
   return (
@@ -111,15 +165,25 @@ export default function RegistrationPage(props) {
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Register Yourself</h4>
                     <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
-                      </Button>
+                      <GoogleLogin
+                        clientId={process.env.REACT_APP_GOOGLE_OAUTH}
+                        render={(renderProps) => (
+                          <Button
+                            justIcon
+                            href="#pablo"
+                            target="_blank"
+                            color="transparent"
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                            variant="contained"
+                          >
+                            <i className={"fab fa-google-plus-g"} />
+                          </Button>
+                        )}
+                        onSuccess={googleSuccess}
+                        onFailure={googleFailure}
+                        cookiePolicy="single_host_origin"
+                      />
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
